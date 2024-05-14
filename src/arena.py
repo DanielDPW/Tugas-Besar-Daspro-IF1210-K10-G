@@ -1,4 +1,4 @@
-from . import arr
+from . import utils
 from . import battle
 from . import rng
 from . import inventory
@@ -18,7 +18,7 @@ def arena(monster_dict, enemy, user_data, user_id, user_items, monster_inventory
         else:
             stage_cleared = stage_cleared + 1
     reward = max(0,50 * (2 ** (stage_cleared - 1)))
-    user_index = arr.find_row(user_data, index = 0, element = user_id)
+    user_index = utils.find_row(user_data, index = 0, element = user_id)
     user_data[user_index][4] = str(int(user_data[user_index][4]) + reward)
     print(f"Total damage dealt : {total_damage_dealt}")
     print(f"Total damage taken : {total_damage_taken}")

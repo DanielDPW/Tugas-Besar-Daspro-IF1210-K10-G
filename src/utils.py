@@ -144,7 +144,7 @@ def find_row(matrix, index : int, element : str) -> int:
             return i
     return -1
 
-def strip(x: str) -> str:
+def remove_whitespace(x: str) -> str:
     new_string = ''
     whitespace_chars = [' ', '\t', '\n', '\r', '\f', '\v']
     
