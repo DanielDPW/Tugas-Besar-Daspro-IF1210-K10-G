@@ -11,7 +11,13 @@ def is_in_row(matrix, index : int, x : str) -> bool:
         return False
 
 def is_empty(array) -> bool:
-    return len(array) == 0
+    if len(array) == 0:
+        return True
+    for element in array:
+            if element:
+                return False
+    return True
+
 
 def row_length(matrix) -> int:
     if matrix:
@@ -29,7 +35,7 @@ def remove_empty_row(matrix):
     new_matrix = []
 
     for row in matrix:
-        if any(row):
+        if not is_empty(row):
             new_matrix.append(row)
 
     return new_matrix

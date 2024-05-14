@@ -24,28 +24,6 @@ def load_enemy(monster_data, monster_level):
     enemy_dict = {'name' : name, 'type' : type, 'id': monster_id, 'level': monster_level, 'atk_power': atk_power, 'def_power': def_power, 'hp': hp, 'max_hp' : hp, 'speed' : speed}
     return enemy_dict
 
-def load_user_monsters(user_id, monster_inventory_data, monster_data):
-    monster_dict = []
-    user_monsters = inventory.get_user_monsters(user_id, monster_inventory_data)
-
-    for row in user_monsters:
-        monster_index = utils.find_row(monster_data, index = 0, element = row[1])
-        if int(row[4]) > 0:
-            monster_id = row[1]
-            monster_level = row[2]
-            monster_name = row[3]
-            type = monster_data[monster_index][1]
-            atk_power = int(int(monster_data[monster_index][2]) * (1 + (monster_level - 1) * 0.1))
-            def_power = min(int(int(monster_data[monster_index][3]) * (1 + (monster_level - 1) * 0.1)), 50)
-            hp = int(row[4])
-            max_hp = int(int(monster_data[monster_index][4]) * (1 + (monster_level - 1) * 0.1))
-            speed = min(int(int(monster_data[monster_index][5]) * (1 + (monster_level - 1) * 0.1)), 50)
-
-            user_monster = {'name' : monster_name, 'type' : type, 'id' : monster_id, 'level' : monster_level, 'atk_power'  : atk_power, 'def_power' : def_power, 'hp' : hp, 'max_hp' : max_hp, 'speed' : speed}
-            monster_dict.append(user_monster)
-        
-    return monster_dict
-
 def switch_monster(monster_dict, current_monster_index = None):
     monster_indices = []
     for i in range(len(monster_dict)):
@@ -429,16 +407,17 @@ def battle(monster_dict, enemy, user_data, user_id, user_items, monster_inventor
         return total_damage_dealt, total_damage_taken, victory
     
 def update_post_battle_data(user_id, user_items, monster_inventory_data, monster_dict, item_inventory_data):
-    for i in range(len(monster_inventory_data)):
-        if monster_inventory_data[i][0] == user_id:
-            for monster in monster_dict:
-                if monster['name'] == monster_inventory_data[i][3]:
-                    monster_inventory_data[i][4] = monster['hp']
+    for monster in monster_inventory_data:
+        if monster[0] == user_id:
+            for user_monster in monster_dict:
+                if user_monster['name'] == monster[3]:
+                    monster[4] = user_monster['hp']
 
-    for i in range(len(item_inventory_data)):
-        if item_inventory_data[i][0] == user_id:
-            for item in item_inventory_data:
-                for user_item in user_items:
-                    if item[1] == user_item[1]:
-                        item[2] = user_item[2]
+    for item in item_inventory_data:
+        if item[0] == user_id:
+            for user_item in user_items:
+                if user_item[2] == '0' and item[1] == user_item[1]:
+                    item = utils.copy_array([])
+                elif item[1] == user_item[1]:
+                    item[2] = user_item[2]
 
