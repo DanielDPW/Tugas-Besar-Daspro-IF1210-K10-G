@@ -1,0 +1,6 @@
+id;type;atk_power;def_power;hp;speed
+1;Pikachow;125;10;5000;45
+2;Bulbu;50;50;5000;10
+3;Zeze;300;10;5000;25
+4;Zuko;100;25;5000;32
+5;Chacha;80;30;5000;22
