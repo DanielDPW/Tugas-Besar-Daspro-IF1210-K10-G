@@ -71,12 +71,38 @@ def name_monster(user_id, monster_inventory_data):
             else:
                 return name
             
-def show_items(user_id, user_data, user_items):
+def show_items(user_id, user_data,item_inventory_data):
     print(f"Inventory (User ID: {user_id})")
     user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id)
     print(f"Jumlah OWCA Coins Anda sekarang: {user_data[user_index][4]}")
+    user_items = get_user_inventory(user_id,item_inventory_data)
     for i, user_item in enumerate(user_items):
-        print(f"{i + 1}. {(user_item[1]).title()} {user_item[2]}")
+        print(f"{str(i + 1)}. {(user_item[1]).title()} Quantity: {user_item[2]}")
+    options = [str(i + 1) for i in range(len(user_items))]
+    while True:
+        a = utils.remove_whitespace(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
+        if a in options:
+            item_desc(user_items, a)
+        elif a == 'x':
+            break
+
+def item_desc(user_items,index):
+    index = int(index)
+    item = user_items[index - 1]
+    
+    print(f"{item[1].title()}")
+    print(f"Quantity: {item[2]}")
+    
+    if item[1] == 'strength':
+        print(f"Meningkatkan ATK Power sebanyak 5% dari ATK Power.")
+    elif item[1] == 'speed':
+        print(f"Meningkatkan Speed sebanyak 5% dari Speed.")
+    elif item[1] == 'resilience':
+        print(f"Meningkatkan DEF Power sebanyak 5% dari DEF Power.")
+    elif item[1] == 'healing':
+        print(f"Mengisi darah sebanyak 25% dari Base HP.")
+    elif item[1] == 'monsterball':
+        print(f"Memasukkan monster musuh ke koleksimu")
 
 def show_monsters(user_id, monster_inventory_data, monster_data, user_data):
     print(f"Inventory (User ID: {user_id})")
@@ -85,3 +111,21 @@ def show_monsters(user_id, monster_inventory_data, monster_data, user_data):
     monster_dict = load_user_monsters(user_id,monster_inventory_data,monster_data)
     for i, monster in enumerate(monster_dict):
         print(f"{i + 1}. {(monster['name']).title()} (Type: {monster['type']} Level: {monster['level']} HP: {monster['hp']}/{monster['max_hp']}")
+    options = [str(i + 1) for i in range(len(monster_dict))]
+    while True:
+        a = utils.remove_whitespace(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
+        if a in options:
+            monster_desc(monster_dict, a)
+        elif a == 'x':
+            break
+
+def monster_desc(monster_dict,index):
+    index = int(index)
+    monster = monster_dict[index - 1]
+    
+    print(f"{monster['name'].title()}")
+    print(f"Level: {monster['level']}")
+    print(f"ATK Power: {monster['atk_power']}")
+    print(f"DEF Power: {monster['def_power']}")
+    print(f"Speed: {monster['speed']}")
+    print(f"HP: {monster['hp']}/{monster['max_hp']}")
