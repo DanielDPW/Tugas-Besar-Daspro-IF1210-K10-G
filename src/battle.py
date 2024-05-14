@@ -43,6 +43,7 @@ def switch_monster(monster_dict, current_monster_index = None):
                 elif y.lower() == 'n':
                     if current_monster_index == None:
                         print("Please select a monster")
+                        x = utils.remove_whitespace(input(">>> "))
                     else:
                         return current_monster_index,monster_dict[current_monster_index],False
                 else:
@@ -401,23 +402,22 @@ def battle(monster_dict, enemy, user_data, user_id, user_items, monster_inventor
         else:
             print("Anda berhasil kabur dari battle")
             victory = False
-        update_post_battle_data(user_id, user_items, monster_inventory_data, monster_dict, item_inventory_data)
+        item_inventory_data = update_post_battle_data(user_id, user_items, monster_inventory_data, monster_dict, item_inventory_data)
         monster_dict = []
         enemy = {}
-        return total_damage_dealt, total_damage_taken, victory
+        return total_damage_dealt, total_damage_taken, victory,item_inventory_data
     
 def update_post_battle_data(user_id, user_items, monster_inventory_data, monster_dict, item_inventory_data):
     for monster in monster_inventory_data:
         if monster[0] == user_id:
             for user_monster in monster_dict:
                 if user_monster['name'] == monster[3]:
-                    monster[4] = user_monster['hp']
+                    monster[4] = str(user_monster['hp'])
 
     for item in item_inventory_data:
         if item[0] == user_id:
             for user_item in user_items:
-                if user_item[2] == '0' and item[1] == user_item[1]:
-                    item = utils.copy_array([])
-                elif item[1] == user_item[1]:
-                    item[2] = user_item[2]
+                if item[1] == user_item[1]:
+                    item[2] = str(user_item[2])
+    return utils.remove_row(item_inventory_data, 2,'0')
 

@@ -45,9 +45,9 @@ def get_user_inventory(user_id : str, item_inventory_data):
         if user_id == row[0]:
             for i in range(len(row)):
                 if item_inventory_data[0][i] in int_data:
-                    if row[i] > int('0'):
-                        row[i] = int(row[i])
-            user_items.append(row)
+                    row[i] = int(row[i])
+            if row[2] > 0:
+                user_items.append(row)
     
     return user_items
 
