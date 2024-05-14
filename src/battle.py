@@ -34,16 +34,16 @@ def switch_monster(monster_dict, current_monster_index = None):
         print(f"{i + 1}. {monster['name']}")
 
     while True:
-        x = utils.remove_whitespace(input(">>> "))
+        x = utils.strip(input(">>> "))
         if x in monster_indices:
             while True:
-                y = utils.remove_whitespace(input("Are you sure? (Y/N) "))
+                y = utils.strip(input("Are you sure? (Y/N) "))
                 if y.lower() == 'y':
                     break
                 elif y.lower() == 'n':
                     if current_monster_index == None:
                         print("Please select a monster")
-                        x = utils.remove_whitespace(input(">>> "))
+                        x = utils.strip(input(">>> "))
                     else:
                         return current_monster_index,monster_dict[current_monster_index],False
                 else:
@@ -112,7 +112,7 @@ def select_action(arena = False):
         print("4. Run")
         if not arena:
             print("5. Monster Ball")
-        x = utils.remove_whitespace(input(">>> "))
+        x = utils.strip(input(">>> "))
         if x in options:
             break
         else:
@@ -133,7 +133,7 @@ def select_potion(user_items,monster,current_monster_index,status_effect,monster
             print(f"3. Resilience (Quantity: {user_items[resilience_index][2] if resilience_index != -1 else 0})")
             print(f"4. Healing (Quantity: {user_items[healing_index][2] if healing_index != -1 else 0})")
             print("5. Cancel")
-            x = utils.remove_whitespace(input(">>> "))
+            x = utils.strip(input(">>> "))
             if x in ['1','2','3','4','5']:
                 if x == '1':
                     if strength_index != -1 and int(user_items[strength_index][2]) > 0:
@@ -312,7 +312,7 @@ def monster_ball(user_id,enemy,user_items,monster_inventory_data):
     if monster_ball_index != -1 and user_items[monster_ball_index][2] > 0:
         print(f"Monster Ball (Quantity: {user_items[monster_ball_index][2]})")
         while True:
-            x = utils.remove_whitespace(input("Catch? (Y/N) "))
+            x = utils.strip(input("Catch? (Y/N) "))
             if x.lower() == 'y':
                 user_items[monster_ball_index][2] = user_items[monster_ball_index][2] - 1
                 catch(user_id,enemy,monster_inventory_data)

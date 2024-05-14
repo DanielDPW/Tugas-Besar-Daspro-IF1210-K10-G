@@ -17,7 +17,7 @@ def laboratory(user_id, monster_inventory_data, monster_data, user_data):
         print("Level 3 -> Level 4: 700 OC")
         print("Level 4 -> Level 5: 900 OC")
         while True:
-            a = utils.remove_whitespace(input("Pilih monster atau x untuk keluar:"))
+            a = utils.strip(input("Pilih monster atau x untuk keluar:"))
             if a in options:
                 monster_inventory_data,user_data = level_up(user_oc,user_index,user_id,user_data,monster_dict,monster_inventory_data,monster_data,a)
                 break
@@ -34,7 +34,7 @@ def level_up(user_oc, user_index, user_id, user_data, monster_dict, monster_inve
         print(f"{monster['name']} akan diupgrade ke level {monster['level'] + 1}.")
         print(f"Harga untuk melakukan upgrade {monster['name']} adalah {price}")
         while True:
-            x = utils.remove_whitespace(input("Lanjutkan upgrade? (Y/N) "))
+            x = utils.strip(input("Lanjutkan upgrade? (Y/N) "))
             if x.lower() == 'y':
                 if int(user_oc) >= price:
                     user_data[user_index][4] = str(int(user_data[user_index][4]) - price)
