@@ -405,19 +405,14 @@ def battle(monster_level,user_data, user_id, monster_inventory_data, item_invent
         else:
             print("Anda berhasil kabur dari battle")
             victory = False
-        item_inventory_data = update_post_battle_data(user_id, user_items, monster_inventory_data, monster_dict, item_inventory_data)
+        item_inventory_data = update_item_inventory_data(user_id, user_items, item_inventory_data)
+        monster_inventory_data = update_monster_inventory_data(user_id, monster_dict, monster_inventory_data)
         monster_dict = []
         user_items = []
         enemy = {}
         return total_damage_dealt, total_damage_taken, victory,item_inventory_data,monster_inventory_data
-    
-def update_post_battle_data(user_id, user_items, monster_inventory_data, monster_dict, item_inventory_data):
-    for monster in monster_inventory_data:
-        if monster[0] == user_id:
-            for user_monster in monster_dict:
-                if user_monster['name'] == monster[3]:
-                    monster[4] = str(user_monster['hp'])
 
+def update_item_inventory_data(user_id, user_items, item_inventory_data):
     for item in item_inventory_data:
         if item[0] == user_id:
             for user_item in user_items:
@@ -425,3 +420,10 @@ def update_post_battle_data(user_id, user_items, monster_inventory_data, monster
                     item[2] = str(user_item[2])
     return utils.remove_row(item_inventory_data, 2,'0')
 
+def update_monster_inventory_data(user_id, monster_dict, monster_inventory_data):
+    for monster in monster_inventory_data:
+        if monster[0] == user_id:
+            for user_monster in monster_dict:
+                if user_monster['name'] == monster[3]:
+                    monster[4] = str(user_monster['hp'])
+    return monster_inventory_data
