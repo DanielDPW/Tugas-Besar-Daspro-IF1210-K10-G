@@ -82,7 +82,7 @@ def show_items(user_id, user_data,item_inventory_data):
             print(f"{str(i + 1)}. {(user_item[1]).title()} Quantity: {user_item[2]}")
         options = [str(i + 1) for i in range(len(user_items))]
         while True:
-            a = utils.remove_whitespace(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
+            a = utils.strip(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
             if a in options:
                 item_desc(user_items, a)
             elif a == 'x':
@@ -117,7 +117,7 @@ def show_monsters(user_id, monster_inventory_data, monster_data, user_data):
             print(f"{i + 1}. {(monster['name']).title()} (Type: {monster['type']} Level: {monster['level']} HP: {monster['hp']}/{monster['max_hp']}")
         options = [str(i + 1) for i in range(len(monster_dict))]
         while True:
-            a = utils.remove_whitespace(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
+            a = utils.strip(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
             if a in options:
                 monster_desc(monster_dict, a)
             elif a == 'x':

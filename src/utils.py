@@ -150,15 +150,6 @@ def find_row(matrix, index : int, element : str) -> int:
             return i
     return -1
 
-def remove_whitespace(x: str) -> str:
-    new_string = ''
-    whitespace_chars = [' ', '\t', '\n', '\r', '\f', '\v']
-    
-    for char in x:
-        if char not in whitespace_chars:
-            new_string = new_string + char
-    return new_string
-
 def copy_dict(dict):
     new_dict = {}
     for key in dict:
@@ -192,3 +183,18 @@ def descending_sort(array):
         array[i], array[max_index] = array[max_index], array[i]
     
     return array
+
+def strip(line: str) -> str:
+    i = 0
+    while i < len(line) and is_space(line[i]):
+        i = i + 1
+
+    j = len(line) - 1
+    while j >= i and is_space(line[j]):
+        j = j - 1
+
+    new_line = ""
+    for k in range(i, j + 1):
+        new_line = new_line + line[k]
+
+    return new_line
