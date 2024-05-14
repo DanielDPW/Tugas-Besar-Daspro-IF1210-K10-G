@@ -1,4 +1,4 @@
-from . import arr
+from . import utils
 from . import rng
 from . import inventory
 
@@ -13,7 +13,7 @@ def randomize_enemy(monster_data):
 
 def load_enemy(monster_data, monster_level):
     monster_id = randomize_enemy(monster_data)
-    monster_index = arr.find_row(monster_data, index=0, element=monster_id)
+    monster_index = utils.find_row(monster_data, index=0, element=monster_id)
     
     type = monster_data[monster_index][1]
     name = 'Enemy' + type
@@ -29,7 +29,7 @@ def load_user_monsters(user_id, monster_inventory_data, monster_data):
     user_monsters = inventory.get_user_monsters(user_id, monster_inventory_data)
 
     for row in user_monsters:
-        monster_index = arr.find_row(monster_data, index = 0, element = row[1])
+        monster_index = utils.find_row(monster_data, index = 0, element = row[1])
         if int(row[4]) > 0:
             monster_id = row[1]
             monster_level = row[2]
@@ -56,10 +56,10 @@ def switch_monster(monster_dict, current_monster_index = None):
         print(f"{i + 1}. {monster['name']}")
 
     while True:
-        x = arr.strip(input(">>> "))
+        x = utils.remove_whitespace(input(">>> "))
         if x in monster_indices:
             while True:
-                y = arr.strip(input("Are you sure? (Y/N) "))
+                y = utils.remove_whitespace(input("Are you sure? (Y/N) "))
                 if y.lower() == 'y':
                     break
                 elif y.lower() == 'n':
@@ -133,7 +133,7 @@ def select_action(arena = False):
         print("4. Run")
         if not arena:
             print("5. Monster Ball")
-        x = arr.strip(input(">>> "))
+        x = utils.remove_whitespace(input(">>> "))
         if x in options:
             break
         else:
@@ -141,10 +141,10 @@ def select_action(arena = False):
     return x
 
 def select_potion(user_items,monster,current_monster_index,status_effect,monster_data):
-    strength_index = arr.find_row(user_items, 1, 'strength')
-    speed_index = arr.find_row(user_items, 1, 'speed')
-    resilience_index = arr.find_row(user_items, 1, 'resilience')
-    healing_index = arr.find_row(user_items, 1, 'healing')
+    strength_index = utils.find_row(user_items, 1, 'strength')
+    speed_index = utils.find_row(user_items, 1, 'speed')
+    resilience_index = utils.find_row(user_items, 1, 'resilience')
+    healing_index = utils.find_row(user_items, 1, 'healing')
 
     if user_items and (user_items[strength_index][2] != 0 or user_items[speed_index][2] !=0 or user_items[resilience_index][2] != 0 or user_items[healing_index][2] != 0):
         while True:
@@ -154,7 +154,7 @@ def select_potion(user_items,monster,current_monster_index,status_effect,monster
             print(f"3. Resilience (Quantity: {user_items[resilience_index][2] if resilience_index != -1 else 0})")
             print(f"4. Healing (Quantity: {user_items[healing_index][2] if healing_index != -1 else 0})")
             print("5. Cancel")
-            x = arr.strip(input(">>> "))
+            x = utils.remove_whitespace(input(">>> "))
             if x in ['1','2','3','4','5']:
                 if x == '1':
                     if strength_index != -1 and int(user_items[strength_index][2]) > 0:
@@ -271,7 +271,7 @@ def run(monster,enemy,escape_attempt):
             return False
 
 def heal(monster, monster_data):
-    monster_index = arr.find_row(monster_data, index = 0, element = monster['id'])
+    monster_index = utils.find_row(monster_data, index = 0, element = monster['id'])
     max_hp = int(int(monster_data[monster_index][4]) * (1 + (monster['level'] - 1) * 0.1))
     return int(min(monster['hp'] + 0.25 * max_hp, max_hp))
 
@@ -329,11 +329,11 @@ def catch(user_id,enemy,monster_inventory_data):
             print("Monster lepas")
 
 def monster_ball(user_id,enemy,user_items,monster_inventory_data):
-    monster_ball_index = arr.find_row(user_items, 1, 'monsterball')
+    monster_ball_index = utils.find_row(user_items, 1, 'monsterball')
     if monster_ball_index != -1 and user_items[monster_ball_index][2] > 0:
         print(f"Monster Ball (Quantity: {user_items[monster_ball_index][2]})")
         while True:
-            x = arr.strip(input("Catch? (Y/N) "))
+            x = utils.remove_whitespace(input("Catch? (Y/N) "))
             if x.lower() == 'y':
                 user_items[monster_ball_index][2] = user_items[monster_ball_index][2] - 1
                 catch(user_id,enemy,monster_inventory_data)
@@ -347,7 +347,7 @@ def monster_ball(user_id,enemy,user_items,monster_inventory_data):
         return False
 
 def battle(monster_dict, enemy, user_data, user_id, user_items, monster_inventory_data, item_inventory_data, monster_data, arena, reward = None):
-    if arr.is_empty(monster_dict):
+    if utils.is_empty(monster_dict):
         print("Anda tidak memiliki monster yang bisa bertarung")
         return 0, 0, False
     else:
@@ -416,7 +416,7 @@ def battle(monster_dict, enemy, user_data, user_id, user_items, monster_inventor
             victory = True
             if reward:
                 print(f"Total OC = {reward}")
-                user_data[arr.find_row(user_data, index = 0, element = user_id)][4] = str(int(user_data[arr.find_row(user_data, index = 0, element = user_id)][4]) + reward)
+                user_data[utils.find_row(user_data, index = 0, element = user_id)][4] = str(int(user_data[utils.find_row(user_data, index = 0, element = user_id)][4]) + reward)
         elif monster['hp'] <= 0:
             print(f"Anda dikalahkan monster {enemy['type']}")
             victory = False
