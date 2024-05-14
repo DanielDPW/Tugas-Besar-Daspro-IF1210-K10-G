@@ -3,14 +3,14 @@ from . import battle
 from . import rng
 from . import inventory
 
-def arena(monster_dict, enemy, user_data, user_id, user_items, monster_inventory_data, item_inventory_data, monster_data):
+def arena(user_data, user_id, monster_inventory_data, item_inventory_data, monster_data):
     total_damage_dealt = 0
     total_damage_taken = 0
     stage_cleared = 0
     for i in range(5):
         print(f"Stage {i + 1}")
-        enemy = battle.load_enemy(monster_data, i + 1)
-        damage_dealt, damage_taken, victory,item_inventory_data = battle.battle(monster_dict, enemy, user_data, user_id, user_items, monster_inventory_data, item_inventory_data, monster_data, True)
+        monster_level = i + 1
+        damage_dealt, damage_taken, victory,item_inventory_data,monster_inventory_data = battle.battle(monster_level, user_data, user_id, monster_inventory_data, item_inventory_data, monster_data, True)
         total_damage_dealt = total_damage_dealt + damage_dealt
         total_damage_taken = total_damage_taken + damage_taken
         if not victory:
@@ -27,4 +27,4 @@ def arena(monster_dict, enemy, user_data, user_id, user_items, monster_inventory
         print(f"Anda mendapat reward {reward} OWCA Coins")
     else:
         print("Anda tidak mendapat OWCA Coins")
-    return total_damage_dealt,total_damage_taken,stage_cleared,item_inventory_data
+    return total_damage_dealt,total_damage_taken,stage_cleared,item_inventory_data,monster_inventory_data

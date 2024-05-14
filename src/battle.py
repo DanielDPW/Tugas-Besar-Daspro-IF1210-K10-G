@@ -325,7 +325,10 @@ def monster_ball(user_id,enemy,user_items,monster_inventory_data):
         print("Anda tidak memiliki monster ball")
         return False
 
-def battle(monster_dict, enemy, user_data, user_id, user_items, monster_inventory_data, item_inventory_data, monster_data, arena, reward = None):
+def battle(monster_level,user_data, user_id, monster_inventory_data, item_inventory_data, monster_data, arena, reward = None):
+    monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data)
+    enemy = load_enemy(monster_data,monster_level)
+    user_items = inventory.get_user_inventory(user_id,item_inventory_data)
     if utils.is_empty(monster_dict):
         print("Anda tidak memiliki monster yang bisa bertarung")
         return 0, 0, False
@@ -404,8 +407,9 @@ def battle(monster_dict, enemy, user_data, user_id, user_items, monster_inventor
             victory = False
         item_inventory_data = update_post_battle_data(user_id, user_items, monster_inventory_data, monster_dict, item_inventory_data)
         monster_dict = []
+        user_items = []
         enemy = {}
-        return total_damage_dealt, total_damage_taken, victory,item_inventory_data
+        return total_damage_dealt, total_damage_taken, victory,item_inventory_data,monster_inventory_data
     
 def update_post_battle_data(user_id, user_items, monster_inventory_data, monster_dict, item_inventory_data):
     for monster in monster_inventory_data:
