@@ -72,19 +72,21 @@ def name_monster(user_id, monster_inventory_data):
                 return name
             
 def show_items(user_id, user_data,item_inventory_data):
-    print(f"Inventory (User ID: {user_id})")
-    user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id)
-    print(f"Jumlah OWCA Coins Anda sekarang: {user_data[user_index][4]}")
-    user_items = get_user_inventory(user_id,item_inventory_data)
-    for i, user_item in enumerate(user_items):
-        print(f"{str(i + 1)}. {(user_item[1]).title()} Quantity: {user_item[2]}")
-    options = [str(i + 1) for i in range(len(user_items))]
     while True:
-        a = utils.remove_whitespace(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
-        if a in options:
-            item_desc(user_items, a)
-        elif a == 'x':
-            break
+        print(f"Inventory (User ID: {user_id})")
+        user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id)
+        user_oc = user_data[user_index][4]
+        print(f"Jumlah OWCA Coins Anda sekarang: {user_oc}")
+        user_items = get_user_inventory(user_id,item_inventory_data)
+        for i, user_item in enumerate(user_items):
+            print(f"{str(i + 1)}. {(user_item[1]).title()} Quantity: {user_item[2]}")
+        options = [str(i + 1) for i in range(len(user_items))]
+        while True:
+            a = utils.remove_whitespace(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
+            if a in options:
+                item_desc(user_items, a)
+            elif a == 'x':
+                return
 
 def item_desc(user_items,index):
     index = int(index)
@@ -105,23 +107,25 @@ def item_desc(user_items,index):
         print(f"Memasukkan monster musuh ke koleksimu")
 
 def show_monsters(user_id, monster_inventory_data, monster_data, user_data):
-    print(f"Inventory (User ID: {user_id})")
-    user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id)
-    print(f"Jumlah OWCA Coins Anda sekarang: {user_data[user_index][4]}")
-    monster_dict = load_user_monsters(user_id,monster_inventory_data,monster_data)
-    for i, monster in enumerate(monster_dict):
-        print(f"{i + 1}. {(monster['name']).title()} (Type: {monster['type']} Level: {monster['level']} HP: {monster['hp']}/{monster['max_hp']}")
-    options = [str(i + 1) for i in range(len(monster_dict))]
     while True:
-        a = utils.remove_whitespace(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
-        if a in options:
-            monster_desc(monster_dict, a)
-        elif a == 'x':
-            break
+        print(f"Inventory (User ID: {user_id})")
+        user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
+        user_oc = user_data[user_index][4]
+        print(f"Jumlah OWCA Coins Anda sekarang: {user_oc}")
+        monster_dict = load_user_monsters(user_id,monster_inventory_data,monster_data)
+        for i, monster in enumerate(monster_dict):
+            print(f"{i + 1}. {(monster['name']).title()} (Type: {monster['type']} Level: {monster['level']} HP: {monster['hp']}/{monster['max_hp']}")
+        options = [str(i + 1) for i in range(len(monster_dict))]
+        while True:
+            a = utils.remove_whitespace(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
+            if a in options:
+                monster_desc(monster_dict, a)
+            elif a == 'x':
+                return
 
 def monster_desc(monster_dict,index):
-    index = int(index)
-    monster = monster_dict[index - 1]
+    index = int(index) - 1
+    monster = monster_dict[index]
     
     print(f"{monster['name'].title()}")
     print(f"Level: {monster['level']}")
