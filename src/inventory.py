@@ -24,14 +24,14 @@ def load_user_monsters(user_id, monster_inventory_data, monster_data):
             monster_id = row[1]
             monster_level = row[2]
             monster_name = row[3]
-            type = monster_data[monster_index][1]
+            monster_type = monster_data[monster_index][1]
             atk_power = int(int(monster_data[monster_index][2]) * (1 + (monster_level - 1) * 0.1))
             def_power = min(int(int(monster_data[monster_index][3]) * (1 + (monster_level - 1) * 0.1)), 50)
             hp = int(row[4])
             max_hp = int(int(monster_data[monster_index][4]) * (1 + (monster_level - 1) * 0.1))
             speed = min(int(int(monster_data[monster_index][5]) * (1 + (monster_level - 1) * 0.1)), 50)
 
-            user_monster = {'name' : monster_name, 'type' : type, 'id' : monster_id, 'level' : monster_level, 'atk_power'  : atk_power, 'def_power' : def_power, 'hp' : hp, 'max_hp' : max_hp, 'speed' : speed}
+            user_monster = {'name' : monster_name, 'type' : monster_type, 'id' : monster_id, 'level' : monster_level, 'atk_power'  : atk_power, 'def_power' : def_power, 'hp' : hp, 'max_hp' : max_hp, 'speed' : speed}
             monster_dict.append(user_monster)
         
     return monster_dict
@@ -117,10 +117,10 @@ def show_monsters(user_id, monster_inventory_data, monster_data, user_data):
             print(f"{i + 1}. {(monster['name']).title()} (Type: {monster['type']} Level: {monster['level']} HP: {monster['hp']}/{monster['max_hp']}")
         options = [str(i + 1) for i in range(len(monster_dict))]
         while True:
-            a = utils.strip(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
-            if a in options:
-                monster_desc(monster_dict, a)
-            elif a == 'x':
+            prompt = utils.strip(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
+            if prompt in options:
+                monster_desc(monster_dict, prompt)
+            elif prompt == 'x':
                 return
 
 def monster_desc(monster_dict,index):

@@ -1,3 +1,13 @@
+def max(a: int, b: int) -> int:
+    if a >= b:
+        return a
+    return b
+
+def min(a: int, b: int) -> int:
+    if a <= b:
+        return a
+    return b
+
 def is_in_column(matrix, index : int, x : str) -> bool:
     for row in matrix:
         if x == row[index]:
@@ -144,9 +154,21 @@ def is_space(x):
                 return False
         return True
 
+def is_digit(x: str) -> bool:
+    for i in range(len(x)):
+        if not x[i] in "0123456789":
+            return False
+    return True
+
 def find_row(matrix, index : int, element : str) -> int:
     for i, row in enumerate(matrix):
         if index <= len(row) and row[index] == element:
+            return i
+    return -1
+
+def find_dict_index(dict_list, key: str, value: str) -> int:
+    for i, dictionary in enumerate(dict_list):
+        if key in dictionary and dictionary[key] == value:
             return i
     return -1
 
