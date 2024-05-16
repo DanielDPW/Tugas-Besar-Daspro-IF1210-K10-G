@@ -18,9 +18,9 @@ def load_enemy(monster_data, monster_level):
     type = monster_data[monster_index][1]
     name = 'Enemy' + type
     atk_power = int(int(monster_data[monster_index][2]) * (1 + (monster_level - 1) * 0.1))
-    def_power = min(int(int(monster_data[monster_index][3]) * (1 + (monster_level - 1) * 0.1)), 50)
+    def_power = utils.min(int(int(monster_data[monster_index][3]) * (1 + (monster_level - 1) * 0.1)), 50)
     hp = int(int(monster_data[monster_index][4]) * (1 + (monster_level - 1) * 0.1))
-    speed = min(int(int(monster_data[monster_index][5]) * (1 + (monster_level - 1) * 0.1)), 50)
+    speed = utils.min(int(int(monster_data[monster_index][5]) * (1 + (monster_level - 1) * 0.1)), 50)
     enemy_dict = {'name' : name, 'type' : type, 'id': monster_id, 'level': monster_level, 'atk_power': atk_power, 'def_power': def_power, 'hp': hp, 'max_hp' : hp, 'speed' : speed}
     return enemy_dict
 
@@ -62,7 +62,7 @@ def show_stat(monster,status_effect,current_monster_index):
             if increase == 0:
                 increase = 1
             if max_value is not None:
-                new_stat_value = min(monster[stat_name] + increase, max_value)
+                new_stat_value = utils.min(monster[stat_name] + increase, max_value)
                 increase = new_stat_value - monster[stat_name]
             return f" (+{increase})"
         else:
@@ -85,7 +85,7 @@ def show_both_stat(monster1, monster2, status_effect, current_monster_index):
             if increase == 0:
                 increase = 1
             if max_value is not None:
-                new_stat_value = min(monster[stat_name] + increase, max_value)
+                new_stat_value = utils.min(monster[stat_name] + increase, max_value)
                 increase = new_stat_value - monster[stat_name]
             return f" (+{increase})"
         else:
@@ -252,7 +252,7 @@ def run(monster,enemy,escape_attempt):
 def heal(monster, monster_data):
     monster_index = utils.find_row(monster_data, index = 0, element = monster['id'])
     max_hp = int(int(monster_data[monster_index][4]) * (1 + (monster['level'] - 1) * 0.1))
-    return int(min(monster['hp'] + 0.25 * max_hp, max_hp))
+    return int(utils.min(monster['hp'] + 0.25 * max_hp, max_hp))
 
 def potion(status : str,monster,current_monster_index,status_effect,max_value = None):
     status_effect[current_monster_index].append(status)
@@ -260,7 +260,7 @@ def potion(status : str,monster,current_monster_index,status_effect,max_value = 
         if monster[status] <= 20:
             monster[status] = monster[status] + 1
         else:
-            monster[status] = min(int(1.05 * monster[status]),max_value)
+            monster[status] = utils.min(int(1.05 * monster[status]),max_value)
     else:
         monster[status] = int(1.05 * monster[status])
 
