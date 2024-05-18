@@ -1,24 +1,31 @@
 from typing import *
 from . import utils
 
-def monster_management(monster_data, monster_inventory_data, monster_shop_data):
-    print("SELAMAT DATANG DI DATABASE PARA MONSTER !!!")
-    while True:
-        print("1. Tampilkan semua Monster")
-        print("2. Tambah Monster baru")
-        print("3. Hapus Monster")
-        print("4. Keluar")
-        prompt = utils.strip(input("Pilih aksi: "))
-        if prompt == '1':
-            show_monster(monster_data)
-        elif prompt == '2':
-            monster_data = add_monster(monster_data)
-        elif prompt == '3':
-            monster_data, monster_inventory_data, monster_shop_data = remove_monster(monster_data, monster_inventory_data, monster_shop_data)
-        elif prompt == '4':
-            return monster_data, monster_inventory_data, monster_shop_data
-        else:
-            print("Masukkan input yang valid")
+def monster_management(current_user, monster_data, monster_inventory_data, monster_shop_data):
+    if utils.is_empty(current_user):
+        print("Anda belum login")
+        return monster_data, monster_inventory_data, monster_shop_data
+    elif utils.strip(current_user[3]) != 'admin':
+        print("Anda bukan Admin")
+        return monster_data, monster_inventory_data, monster_shop_data
+    else:
+        print("SELAMAT DATANG DI DATABASE PARA MONSTER !!!")
+        while True:
+            print("1. Tampilkan semua Monster")
+            print("2. Tambah Monster baru")
+            print("3. Hapus Monster")
+            print("4. Keluar")
+            prompt = utils.strip(input("Pilih aksi: "))
+            if prompt == '1':
+                show_monster(monster_data)
+            elif prompt == '2':
+                monster_data = add_monster(monster_data)
+            elif prompt == '3':
+                monster_data, monster_inventory_data, monster_shop_data = remove_monster(monster_data, monster_inventory_data, monster_shop_data)
+            elif prompt == '4':
+                return monster_data, monster_inventory_data, monster_shop_data
+            else:
+                print("Masukkan input yang valid")
 
 def generate_monster_id(monster_data):
     existing_id = utils.ascending_sort([monster_data[i][0] for i in range(1, len(monster_data)) if not utils.is_space(monster_data[i][0])])

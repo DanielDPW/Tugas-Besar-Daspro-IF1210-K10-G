@@ -1,21 +1,29 @@
 from . import utils
 from . import shop
 
-def shop_management(item_shop_data, monster_shop_data, monster_data):
-    item_shop_dict = shop.load_item_shop(item_shop_data)
-    monster_shop_dict = shop.load_monster_shop(monster_shop_data,monster_data)
-    while True:
-        prompt = utils.strip(input("Pilih aksi (lihat/tambah/ubah/hapus/keluar): "))
-        if prompt == 'lihat':
-            shop.look(item_shop_dict,monster_shop_dict)
-        elif prompt == 'tambah':
-            item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict = add(item_shop_data, monster_shop_data, monster_data, item_shop_dict,monster_shop_dict)
-        elif prompt == 'ubah':
-            item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict = change(item_shop_data, monster_shop_data, item_shop_dict, monster_shop_dict)
-        elif prompt == 'hapus':
-            item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict = remove(item_shop_data,item_shop_dict,monster_shop_data,monster_shop_dict)
-        elif prompt == 'keluar':
-            return item_shop_data, monster_shop_data
+def shop_management(current_user,item_shop_data, monster_shop_data, monster_data):
+    if utils.is_empty(current_user):
+        print("Anda belum login")
+        return item_shop_data, monster_shop_data
+    elif utils.strip(current_user[3]) != 'admin':
+        print("Anda bukan Admin")
+        return item_shop_data, monster_shop_data
+    else:
+        print("SELAMAT DATANG DI DATABASE PARA MONSTER !!!")
+        item_shop_dict = shop.load_item_shop(item_shop_data)
+        monster_shop_dict = shop.load_monster_shop(monster_shop_data,monster_data)
+        while True:
+            prompt = utils.strip(input("Pilih aksi (lihat/tambah/ubah/hapus/keluar): "))
+            if prompt == 'lihat':
+                shop.look(item_shop_dict,monster_shop_dict)
+            elif prompt == 'tambah':
+                item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict = add(item_shop_data, monster_shop_data, monster_data, item_shop_dict,monster_shop_dict)
+            elif prompt == 'ubah':
+                item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict = change(item_shop_data, monster_shop_data, item_shop_dict, monster_shop_dict)
+            elif prompt == 'hapus':
+                item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict = remove(item_shop_data,item_shop_dict,monster_shop_data,monster_shop_dict)
+            elif prompt == 'keluar':
+                return item_shop_data, monster_shop_data
 
 def add(item_shop_data, monster_shop_data, monster_data, item_shop_dict,monster_shop_dict):
     while True:
@@ -225,7 +233,7 @@ def edit(shop_type : str, shop_data, shop_dict):
             break
         elif prompt.lower() == 'n':
             break
-    shop_data = shop.update_shop_data(shop_data, shop_dict)
+    shop_data = shop.update_shop_data(shop_data, shop_dict, shop_type)
     return shop_data, shop_dict
 
 def remove(item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict):

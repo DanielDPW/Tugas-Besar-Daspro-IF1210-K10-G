@@ -1,28 +1,35 @@
 from . import utils
 from . import inventory
 
-def laboratory(user_id, monster_inventory_data, monster_data, user_data):
-    while True:
-        print("Laboratory")
-        user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
-        user_oc = user_data[user_index][4]
-        print(f"Jumlah OWCA Coins Anda sekarang: {user_oc}")
-        monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data)
-        for i, monster in enumerate(monster_dict):
-            print(f"{i + 1}. {utils.title(monster['name'])} (Type: {monster['type']} Level: {monster['level']} HP: {monster['hp']}/{monster['max_hp']}")
-        options = [str(i + 1) for i in range(len(monster_dict))]
-        print("Upgrade Price")
-        print("Level 1 -> Level 2: 300 OC")
-        print("Level 2 -> Level 3: 500 OC")
-        print("Level 3 -> Level 4: 700 OC")
-        print("Level 4 -> Level 5: 900 OC")
+def laboratory(current_user, user_id, monster_inventory_data, monster_data, user_data):
+    if utils.is_empty(current_user):
+        print("Anda belum login")
+        return monster_inventory_data, user_data
+    elif utils.strip(current_user[3]) != 'agent':
+        print("Anda bukan Agent")
+        return monster_inventory_data, user_data
+    else:
         while True:
-            a = utils.strip(input("Pilih monster atau x untuk keluar:"))
-            if a in options:
-                monster_inventory_data,user_data = level_up(user_oc,user_index,user_id,user_data,monster_dict,monster_inventory_data,monster_data,a)
-                break
-            elif a == 'x':
-                return monster_inventory_data, user_data
+            print("Laboratory")
+            user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
+            user_oc = user_data[user_index][4]
+            print(f"Jumlah OWCA Coins Anda sekarang: {user_oc}")
+            monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data)
+            for i, monster in enumerate(monster_dict):
+                print(f"{i + 1}. {utils.title(monster['name'])} (Type: {monster['type']} Level: {monster['level']} HP: {monster['hp']}/{monster['max_hp']}")
+            options = [str(i + 1) for i in range(len(monster_dict))]
+            print("Upgrade Price")
+            print("Level 1 -> Level 2: 300 OC")
+            print("Level 2 -> Level 3: 500 OC")
+            print("Level 3 -> Level 4: 700 OC")
+            print("Level 4 -> Level 5: 900 OC")
+            while True:
+                a = utils.strip(input("Pilih monster atau x untuk keluar:"))
+                if a in options:
+                    monster_inventory_data,user_data = level_up(user_oc,user_index,user_id,user_data,monster_dict,monster_inventory_data,monster_data,a)
+                    break
+                elif a == 'x':
+                    return monster_inventory_data, user_data
 
 def level_up(user_oc, user_index, user_id, user_data, monster_dict, monster_inventory_data,monster_data,index):
     index = int(index) - 1

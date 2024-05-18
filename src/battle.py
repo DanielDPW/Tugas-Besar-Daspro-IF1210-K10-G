@@ -291,7 +291,7 @@ def catch(user_id,enemy,monster_inventory_data):
         else:
             print("Monster lepas")
     elif enemy['level'] == 4:
-        if odds < int(1-(enemy['hp']/enemy['max_hp'] * 10)):
+        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 10):
             print("Catch Successful")
             name = inventory.name_monster(user_id,monster_inventory_data)
             monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
@@ -325,92 +325,99 @@ def monster_ball(user_id,enemy,user_items,monster_inventory_data):
         print("Anda tidak memiliki monster ball")
         return False
 
-def battle(monster_level,user_data, user_id, monster_inventory_data, item_inventory_data, monster_data, arena, reward = None):
-    monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data)
-    enemy = load_enemy(monster_data,monster_level)
-    user_items = inventory.get_user_inventory(user_id,item_inventory_data)
-    if utils.is_empty(monster_dict):
-        print("Anda tidak memiliki monster yang bisa bertarung")
-        return 0, 0, False, item_inventory_data,monster_inventory_data
+def battle(current_user,monster_level,user_data, user_id, monster_inventory_data, item_inventory_data, monster_data, arena, reward = None):
+    if utils.is_empty(current_user):
+        print("Anda belum login")
+        return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
+    elif utils.strip(current_user[3]) != 'agent':
+        print("Anda bukan Agent")
+        return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
     else:
-        status_effect = [[''] for i in range(len(monster_dict))]
-        escape_attempt = 0
-        total_damage_taken = 0
-        total_damage_dealt = 0
-        
-        current_monster_index, monster, action_executed = switch_monster(monster_dict)
-        while monster['hp'] > 0 and enemy['hp'] > 0:
-            action_executed = False
-            show_both_stat(monster, enemy,status_effect,current_monster_index)
-            action = select_action(arena)
-            if action == '1':
+        monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data)
+        enemy = load_enemy(monster_data,monster_level)
+        user_items = inventory.get_user_inventory(user_id,item_inventory_data)
+        if utils.is_empty(monster_dict):
+            print("Anda tidak memiliki monster yang bisa bertarung")
+            return 0, 0, False, item_inventory_data,monster_inventory_data
+        else:
+            status_effect = [[''] for i in range(len(monster_dict))]
+            escape_attempt = 0
+            total_damage_taken = 0
+            total_damage_dealt = 0
+            
+            current_monster_index, monster, action_executed = switch_monster(monster_dict)
+            while monster['hp'] > 0 and enemy['hp'] > 0:
+                action_executed = False
+                show_both_stat(monster, enemy,status_effect,current_monster_index)
+                action = select_action(arena)
+                if action == '1':
 
-                if monster['speed'] > enemy['speed']:
-                    damage_dealt, damage_taken = execute_turn(monster,enemy)
-                    total_damage_dealt = total_damage_dealt + damage_dealt
-                    total_damage_taken = total_damage_taken + damage_taken
-
-                elif monster['speed'] < enemy['speed']:
-                    damage_taken, damage_dealt = execute_turn(enemy,monster)
-                    total_damage_dealt = total_damage_dealt + damage_dealt
-                    total_damage_taken = total_damage_taken + damage_taken
-
-                else:
-                    random_priority = rng.rng(1,2)
-
-                    if random_priority == 1:
-                        damage_taken, damage_dealt = execute_turn(enemy,monster)
-                        total_damage_dealt = total_damage_dealt + damage_dealt
-                        total_damage_taken = total_damage_taken + damage_taken
-
-                    elif random_priority == 2:
+                    if monster['speed'] > enemy['speed']:
                         damage_dealt, damage_taken = execute_turn(monster,enemy)
                         total_damage_dealt = total_damage_dealt + damage_dealt
                         total_damage_taken = total_damage_taken + damage_taken
 
-            elif action == '2':
-                current_monster_index,monster,action_executed = switch_monster(monster_dict, current_monster_index)
-                if action_executed:
-                    damage_taken = attack(enemy,monster)
-                    total_damage_taken = total_damage_taken + damage_taken
-            
-            elif action == '3':
-                action_executed = select_potion(user_items,monster,current_monster_index,status_effect,monster_data)
-                if action_executed:
-                    damage_taken = attack(enemy,monster)
-                    total_damage_taken = total_damage_taken + damage_taken
+                    elif monster['speed'] < enemy['speed']:
+                        damage_taken, damage_dealt = execute_turn(enemy,monster)
+                        total_damage_dealt = total_damage_dealt + damage_dealt
+                        total_damage_taken = total_damage_taken + damage_taken
 
-            elif action == '4':
-                if run(monster,enemy,escape_attempt):
-                    break
-                else:
-                    damage_taken = attack(enemy,monster)
-                    total_damage_taken = total_damage_taken + damage_taken
-                    print("Anda tidak bisa kabur")
-            
-            elif action == '5':
-                action_executed = monster_ball(user_id,enemy,user_items,monster_inventory_data)
-                if enemy['hp'] != 0 and action_executed:
-                    damage_taken = attack(enemy,monster)
-                    total_damage_taken = total_damage_taken + damage_taken
-        if enemy['hp'] <= 0:
-            print(f"Selamat Anda telah berhasil mengalahkan monster {enemy['type']}")
-            victory = True
-            if reward:
-                print(f"Total OC = {reward}")
-                user_data[utils.find_row(user_data, index = 0, element = user_id)][4] = str(int(user_data[utils.find_row(user_data, index = 0, element = user_id)][4]) + reward)
-        elif monster['hp'] <= 0:
-            print(f"Anda dikalahkan monster {enemy['type']}")
-            victory = False
-        else:
-            print("Anda berhasil kabur dari battle")
-            victory = False
-        item_inventory_data = update_item_inventory_data(user_id, user_items, item_inventory_data)
-        monster_inventory_data = update_monster_inventory_data(user_id, monster_dict, monster_inventory_data)
-        monster_dict = []
-        user_items = []
-        enemy = {}
-        return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
+                    else:
+                        random_priority = rng.rng(1,2)
+
+                        if random_priority == 1:
+                            damage_taken, damage_dealt = execute_turn(enemy,monster)
+                            total_damage_dealt = total_damage_dealt + damage_dealt
+                            total_damage_taken = total_damage_taken + damage_taken
+
+                        elif random_priority == 2:
+                            damage_dealt, damage_taken = execute_turn(monster,enemy)
+                            total_damage_dealt = total_damage_dealt + damage_dealt
+                            total_damage_taken = total_damage_taken + damage_taken
+
+                elif action == '2':
+                    current_monster_index,monster,action_executed = switch_monster(monster_dict, current_monster_index)
+                    if action_executed:
+                        damage_taken = attack(enemy,monster)
+                        total_damage_taken = total_damage_taken + damage_taken
+                
+                elif action == '3':
+                    action_executed = select_potion(user_items,monster,current_monster_index,status_effect,monster_data)
+                    if action_executed:
+                        damage_taken = attack(enemy,monster)
+                        total_damage_taken = total_damage_taken + damage_taken
+
+                elif action == '4':
+                    if run(monster,enemy,escape_attempt):
+                        break
+                    else:
+                        damage_taken = attack(enemy,monster)
+                        total_damage_taken = total_damage_taken + damage_taken
+                        print("Anda tidak bisa kabur")
+                
+                elif action == '5':
+                    action_executed = monster_ball(user_id,enemy,user_items,monster_inventory_data)
+                    if enemy['hp'] != 0 and action_executed:
+                        damage_taken = attack(enemy,monster)
+                        total_damage_taken = total_damage_taken + damage_taken
+            if enemy['hp'] <= 0:
+                print(f"Selamat Anda telah berhasil mengalahkan monster {enemy['type']}")
+                victory = True
+                if reward:
+                    print(f"Total OC = {reward}")
+                    user_data[utils.find_row(user_data, index = 0, element = user_id)][4] = str(int(user_data[utils.find_row(user_data, index = 0, element = user_id)][4]) + reward)
+            elif monster['hp'] <= 0:
+                print(f"Anda dikalahkan monster {enemy['type']}")
+                victory = False
+            else:
+                print("Anda berhasil kabur dari battle")
+                victory = False
+            item_inventory_data = update_item_inventory_data(user_id, user_items, item_inventory_data)
+            monster_inventory_data = update_monster_inventory_data(user_id, monster_dict, monster_inventory_data)
+            monster_dict = []
+            user_items = []
+            enemy = {}
+            return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
 
 def update_item_inventory_data(user_id, user_items, item_inventory_data):
     for item in item_inventory_data:
