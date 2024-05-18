@@ -70,7 +70,16 @@ def name_monster(user_id, monster_inventory_data):
                 print("Name hanya berupa alfabet")
             else:
                 return name
-            
+def inventory(user_id,user_data,item_inventory_data, monster_inventory_data,monster_data):
+    while True:
+        prompt = utils.strip(input("Mau lihat apa? (item/monster/keluar): "))
+        if prompt == "item":
+            show_items(user_id,user_data,item_inventory_data)
+        elif prompt == "monster":
+            show_monsters(user_id,user_data,monster_inventory_data, monster_data)
+        elif prompt == "keluar":
+            break
+        
 def show_items(user_id, user_data,item_inventory_data):
     while True:
         print(f"Inventory (User ID: {user_id})")
@@ -125,7 +134,7 @@ def item_desc(user_items,index):
     elif item[1] == 'monsterball':
         print(f"Memasukkan monster musuh ke koleksimu")
 
-def show_monsters(user_id, monster_inventory_data, monster_data, user_data):
+def show_monsters(user_id, user_data, monster_inventory_data, monster_data):
     while True:
         print(f"Inventory (User ID: {user_id})")
         user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1

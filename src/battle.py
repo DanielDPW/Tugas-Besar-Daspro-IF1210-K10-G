@@ -331,7 +331,7 @@ def battle(monster_level,user_data, user_id, monster_inventory_data, item_invent
     user_items = inventory.get_user_inventory(user_id,item_inventory_data)
     if utils.is_empty(monster_dict):
         print("Anda tidak memiliki monster yang bisa bertarung")
-        return 0, 0, False
+        return 0, 0, False, item_inventory_data,monster_inventory_data
     else:
         status_effect = [[''] for i in range(len(monster_dict))]
         escape_attempt = 0
@@ -410,7 +410,7 @@ def battle(monster_level,user_data, user_id, monster_inventory_data, item_invent
         monster_dict = []
         user_items = []
         enemy = {}
-        return total_damage_dealt, total_damage_taken, victory,item_inventory_data,monster_inventory_data
+        return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
 
 def update_item_inventory_data(user_id, user_items, item_inventory_data):
     for item in item_inventory_data:

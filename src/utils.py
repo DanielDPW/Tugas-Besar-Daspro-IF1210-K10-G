@@ -1,3 +1,15 @@
+def split(x: str, delimiter: str):
+    lst = []
+    string = ""
+    for i in range(len(x)):
+        if x[i] != delimiter:
+            string = string + x[i]
+        else:
+            lst.append(string)
+            string = ""
+    lst.append(string)
+    return lst
+
 def max(a: int, b: int) -> int:
     if a >= b:
         return a
@@ -243,16 +255,15 @@ def descending_sort(array):
     return array
 
 def strip(line: str) -> str:
-    i = 0
-    while i < len(line) and is_space(line[i]):
-        i = i + 1
-
-    j = len(line) - 1
-    while j >= i and is_space(line[j]):
-        j = j - 1
-
     new_line = ""
-    for k in range(i, j + 1):
-        new_line = new_line + line[k]
+    x = 0
+    y = len(line) - 1
+    while x < len(line) and is_space(line[x]):
+        x = x + 1
+    while y >= x and is_space(line[y]):
+        y = y - 1
+
+    for i in range(x, y + 1):
+        new_line = new_line + line[i]
 
     return new_line

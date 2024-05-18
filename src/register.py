@@ -34,5 +34,6 @@ def register(user_data, current_user):
             id = generate_user_id(user_data)
             new_user_data = [id, username, password, 'agent', '0']
             user_data.append(new_user_data)
+            print(f"Anda telah mendaftarkan user {username}")
     
     return user_data
