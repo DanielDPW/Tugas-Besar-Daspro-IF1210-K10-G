@@ -14,6 +14,7 @@ from src import load as load
 from src import save as save
 from src import exit as exit
 from src import healingfountain as healingfountain
+from src import help as help
 
 user_data, monster_data, monster_shop_data, monster_inventory_data, item_shop_data, item_inventory_data = load.load()
 current_user = []
@@ -21,7 +22,9 @@ user_id = ''
 if None not in (user_data, monster_data, monster_shop_data, monster_inventory_data, item_shop_data, item_inventory_data):
     while True:
         prompt = utils.strip(input(">>> "))
-        if prompt.lower() == "register":
+        if prompt.lower() == "help":
+            help.help(current_user)
+        elif prompt.lower() == "register":
             user_data,monster_inventory_data = register.register(user_data, current_user, monster_data,monster_inventory_data)
         elif prompt.lower() == "login":
             current_user,user_id = login.login(user_data, current_user)
