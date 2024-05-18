@@ -218,8 +218,8 @@ def attack(attacker, defender) -> int:
     speed_diff = defender['speed'] - attacker['speed']
     dodge_chance = max(speed_diff,0)
     
+    print(f"Attack: {base_damage} ({calculate_increase(attack_multiplier - 100)}), Reduced by: {damage_reduction} ({defender['def_power']}%)")
     if rng.rng(1,100) > dodge_chance:
-        print(f"Attack: {base_damage} ({calculate_increase(attack_multiplier - 100)}), Reduced by: {damage_reduction} ({defender['def_power']}%)")
         print(f"{attacker['name']} attacks {defender['name']} for {damage} damage.")
         defender['hp'] = max(defender['hp'] - damage, 0)
     else:
@@ -267,7 +267,7 @@ def potion(status : str,monster,current_monster_index,status_effect,max_value = 
 def catch(user_id,enemy,monster_inventory_data):
     odds = rng.rng(1,100)
     if enemy['level'] == 1:
-        if odds < 75:
+        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 75):
             print("Catch Successful")
             name = inventory.name_monster(user_id,monster_inventory_data)
             monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
@@ -275,7 +275,7 @@ def catch(user_id,enemy,monster_inventory_data):
         else:
             print("Monster lepas")
     elif enemy['level'] == 2:
-        if odds < 50:
+        if odds < int(1-(enemy['hp']/enemy['max_hp']) *50):
             print("Catch Successful")
             name = inventory.name_monster(user_id,monster_inventory_data)
             monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
@@ -283,7 +283,7 @@ def catch(user_id,enemy,monster_inventory_data):
         else:
             print("Monster lepas")
     elif enemy['level'] == 3:
-        if odds < 25:
+        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 25):
             print("Catch Successful")
             name = inventory.name_monster(user_id,monster_inventory_data)
             monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
@@ -291,7 +291,7 @@ def catch(user_id,enemy,monster_inventory_data):
         else:
             print("Monster lepas")
     elif enemy['level'] == 4:
-        if odds < 10:
+        if odds < int(1-(enemy['hp']/enemy['max_hp'] * 10)):
             print("Catch Successful")
             name = inventory.name_monster(user_id,monster_inventory_data)
             monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
@@ -299,7 +299,7 @@ def catch(user_id,enemy,monster_inventory_data):
         else:
             print("Monster lepas")
     elif enemy['level'] == 5:
-        if odds < 5:
+        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 5):
             print("Catch Successful")
             name = inventory.name_monster(user_id,monster_inventory_data)
             monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])

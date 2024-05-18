@@ -13,9 +13,9 @@ def check_valid_characters(x : str) -> bool:
 def generate_user_id(user_data):
     existing_id = utils.ascending_sort([user_data[i][0] for i in range(1, len(user_data)) if not utils.is_space(user_data[i][0])])
     num = 1
-    while num in existing_id:
+    while str(num) in existing_id:
         num = num + 1
-    return num
+    return str(num)
 
 def register(user_data, current_user):
     if not utils.is_empty(current_user):

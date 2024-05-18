@@ -9,7 +9,7 @@ def laboratory(user_id, monster_inventory_data, monster_data, user_data):
         print(f"Jumlah OWCA Coins Anda sekarang: {user_oc}")
         monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data)
         for i, monster in enumerate(monster_dict):
-            print(f"{i + 1}. {(monster['name']).title()} (Type: {monster['type']} Level: {monster['level']} HP: {monster['hp']}/{monster['max_hp']}")
+            print(f"{i + 1}. {utils.title(monster['name'])} (Type: {monster['type']} Level: {monster['level']} HP: {monster['hp']}/{monster['max_hp']}")
         options = [str(i + 1) for i in range(len(monster_dict))]
         print("Upgrade Price")
         print("Level 1 -> Level 2: 300 OC")

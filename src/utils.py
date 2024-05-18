@@ -8,6 +8,26 @@ def min(a: int, b: int) -> int:
         return a
     return b
 
+def title(s : str) -> str:
+    capitalize = True
+    new_string = ''
+    for char in s:
+        if capitalize:
+            new_string = new_string + char.upper()
+            capitalize = False
+        else:
+            new_string = new_string + char
+        if char == ' ':
+            capitalize = True
+    return new_string
+
+def is_int(string : str) -> bool:
+    int_char = ['0','1','2','3','4','5','6','7','8','9']
+    for char in string:
+        if char not in int_char:
+            return False
+    return True
+
 def is_in_column(matrix, index : int, x : str) -> bool:
     for row in matrix:
         if x == row[index]:
@@ -66,6 +86,16 @@ def copy_array(array):
         new_array.append(array[i])
     
     return new_array
+
+def remove_index(array : list, index : int) -> list:
+    new_array = []
+    for i in range(len(array)):
+        if i != index:
+            new_array.append(array[i])
+    return new_array
+
+def remove_value(array : list, value : str):
+    return [item for item in array if item != value]
 
 def remove_row(matrix, index = None, element = None):
     new_matrix = []
@@ -159,6 +189,12 @@ def is_digit(x: str) -> bool:
         if not x[i] in "0123456789":
             return False
     return True
+
+def is_in_dict(dict_list, key : str, value : str) -> bool:
+    for dictionary in dict_list:
+        if key in dictionary and dictionary[key] == value:
+            return True
+    return False
 
 def find_row(matrix, index : int, element : str) -> int:
     for i, row in enumerate(matrix):
