@@ -326,6 +326,9 @@ def monster_ball(user_id,enemy,user_items,monster_inventory_data):
         return False
 
 def battle(current_user,monster_level,user_data, user_id, monster_inventory_data, item_inventory_data, monster_data, arena, reward = None):
+    total_damage_taken = 0
+    total_damage_dealt = 0
+    victory = False
     if utils.is_empty(current_user):
         print("Anda belum login")
         return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
@@ -333,7 +336,7 @@ def battle(current_user,monster_level,user_data, user_id, monster_inventory_data
         print("Anda bukan Agent")
         return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
     else:
-        monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data)
+        monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data, battle = True)
         enemy = load_enemy(monster_data,monster_level)
         user_items = inventory.get_user_inventory(user_id,item_inventory_data)
         if utils.is_empty(monster_dict):
@@ -342,8 +345,6 @@ def battle(current_user,monster_level,user_data, user_id, monster_inventory_data
         else:
             status_effect = [[''] for i in range(len(monster_dict))]
             escape_attempt = 0
-            total_damage_taken = 0
-            total_damage_dealt = 0
             
             current_monster_index, monster, action_executed = switch_monster(monster_dict)
             while monster['hp'] > 0 and enemy['hp'] > 0:

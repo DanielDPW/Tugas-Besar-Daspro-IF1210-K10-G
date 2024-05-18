@@ -4,6 +4,9 @@ from . import rng
 from . import inventory
 
 def arena(current_user, user_data, user_id, monster_inventory_data, item_inventory_data, monster_data):
+    total_damage_dealt = 0
+    total_damage_taken = 0
+    stage_cleared = 0
     if utils.is_empty(current_user):
         print("Anda belum login")
         return total_damage_dealt,total_damage_taken,stage_cleared,item_inventory_data,monster_inventory_data
@@ -11,9 +14,6 @@ def arena(current_user, user_data, user_id, monster_inventory_data, item_invento
         print("Anda bukan Agent")
         return total_damage_dealt,total_damage_taken,stage_cleared,item_inventory_data,monster_inventory_data
     else:
-        total_damage_dealt = 0
-        total_damage_taken = 0
-        stage_cleared = 0
         for i in range(5):
             print(f"Stage {i + 1}")
             monster_level = i + 1

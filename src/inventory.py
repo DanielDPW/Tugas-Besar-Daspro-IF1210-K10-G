@@ -14,25 +14,26 @@ def get_user_monsters(user_id : str, monster_inventory_data):
     
     return user_monsters
 
-def load_user_monsters(user_id, monster_inventory_data, monster_data):
+def load_user_monsters(user_id, monster_inventory_data, monster_data, battle = False):
     monster_dict = []
     user_monsters = get_user_monsters(user_id, monster_inventory_data)
 
     for row in user_monsters:
         monster_index = utils.find_row(monster_data, index = 0, element = row[1])
-        if int(row[4]) > 0:
-            monster_id = row[1]
-            monster_level = row[2]
-            monster_name = row[3]
-            monster_type = monster_data[monster_index][1]
-            atk_power = int(int(monster_data[monster_index][2]) * (1 + (monster_level - 1) * 0.1))
-            def_power = min(int(int(monster_data[monster_index][3]) * (1 + (monster_level - 1) * 0.1)), 50)
-            hp = int(row[4])
-            max_hp = int(int(monster_data[monster_index][4]) * (1 + (monster_level - 1) * 0.1))
-            speed = min(int(int(monster_data[monster_index][5]) * (1 + (monster_level - 1) * 0.1)), 50)
+        if int(row[4]) > 0 and battle:
+            continue
+        monster_id = row[1]
+        monster_level = row[2]
+        monster_name = row[3]
+        monster_type = monster_data[monster_index][1]
+        atk_power = int(int(monster_data[monster_index][2]) * (1 + (monster_level - 1) * 0.1))
+        def_power = min(int(int(monster_data[monster_index][3]) * (1 + (monster_level - 1) * 0.1)), 50)
+        hp = int(row[4])
+        max_hp = int(int(monster_data[monster_index][4]) * (1 + (monster_level - 1) * 0.1))
+        speed = min(int(int(monster_data[monster_index][5]) * (1 + (monster_level - 1) * 0.1)), 50)
 
-            user_monster = {'name' : monster_name, 'type' : monster_type, 'id' : monster_id, 'level' : monster_level, 'atk_power'  : atk_power, 'def_power' : def_power, 'hp' : hp, 'max_hp' : max_hp, 'speed' : speed}
-            monster_dict.append(user_monster)
+        user_monster = {'name' : monster_name, 'type' : monster_type, 'id' : monster_id, 'level' : monster_level, 'atk_power'  : atk_power, 'def_power' : def_power, 'hp' : hp, 'max_hp' : max_hp, 'speed' : speed}
+        monster_dict.append(user_monster)
         
     return monster_dict
 
