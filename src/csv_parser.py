@@ -1,31 +1,20 @@
+from . import utils
+
 def parse_csv(csv):
-    data = []
-
     with open(csv, 'r') as file:
-        row = []
-        delimiter = [',',';']
-        field = ''
-        in_field = False
-
+        headers = []
+        found_headers = False
         for line in file:
-            for char in line:
-                if char == '"':
-                    in_field = not in_field
-                elif char in delimiter and not in_field:
-                    row.append(field)
-                    field = ''
-                elif char == '\n' and not in_field:
-                    row.append(field)
-                    data.append(row)
-                    row = []
-                    field = ''
-                else:
-                    field = field + char
-            
-            if field:
-                row.append(field)
-                field = ''
-
+            if not found_headers:
+                headers = utils.split(utils.strip(line), ';')
+                found_headers = True
+                data = [headers]
+            else:
+                row = utils.split(utils.strip(line), ';')
+                if len(row) != len(headers):
+                    print("Some data is missing or exceeds the header columns!")
+                    return None
+                data.append(row)
     return data
 
 def generate_csv(matrix, csv):

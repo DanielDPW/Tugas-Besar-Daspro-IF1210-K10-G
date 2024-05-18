@@ -14,8 +14,8 @@ def login(user_data, current_user):
             print("Password salah!")
         else:
             current_user = utils.copy_array(user_data[user_id])
-    
-    return current_user
+        print(f"Anda telah login dengan user {current_user[1]}")
+    return current_user,current_user[0]
 
 def logout(current_user):
     if utils.is_empty(current_user):
@@ -24,4 +24,4 @@ def logout(current_user):
     else:
         current_user = []
     
-    return current_user
+    return current_user, ''
