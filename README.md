@@ -127,3 +127,6 @@ Tugas ini diberikan kepada mahasiswa TPB STEI 2023 pada Semester 2 tahun ajaran 
 | 19623049 | Darryl Rayhananta Adenan | 
 | 19623189 | Muhammad Aymar Barkhaya | 
 | 16523199 | Fathur Rahman Arahkal | 
+
+[Python.py]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
+[Python-url]: https://www.python.org/
