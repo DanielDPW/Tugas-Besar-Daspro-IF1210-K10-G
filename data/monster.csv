@@ -1,7 +1,7 @@
 id;type;atk power;def power;hp;speed
-1;Pikachow;750;10;9500;45
-2;Bulbu;800;10;9500;40
-3;Zeze;850;10;9500;35
+1;Pikachow;750;30;8500;40
+2;Bulbu;800;30;8000;40
+3;Zeze;850;30;7500;40
 4;Zuko;700;10;5000;30
 5;Chacha;800;10;7500;30
 6;Brinecat;550;15;7000;30
