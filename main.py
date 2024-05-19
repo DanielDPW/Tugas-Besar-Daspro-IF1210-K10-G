@@ -1,3 +1,5 @@
+import time
+
 from src import rng as rng
 from src import csv_parser as csv_parser
 from src import utils as utils
@@ -33,13 +35,17 @@ if None not in (user_data, monster_data, monster_shop_data, monster_inventory_da
         elif prompt.lower() == "inventory":
             inventory.inventory(current_user, user_id,user_data,item_inventory_data, monster_inventory_data,monster_data)
         elif prompt.lower() == "battle":
-            total_damage_dealt, total_damage_taken, victory,item_inventory_data,monster_inventory_data = battle.battle(current_user,rng.rng(1,5),user_data, user_id, monster_inventory_data, item_inventory_data, monster_data, arena = False, reward = rng.rng(15,50))
+            total_damage_dealt, total_damage_taken, victory,item_inventory_data,monster_inventory_data = battle.battle(current_user,battle.randomize_enemy_level(),user_data, user_id, monster_inventory_data, item_inventory_data, monster_data, arena = False, reward = rng.rng(15,50))
         elif prompt.lower() == "arena":
             total_damage_dealt,total_damage_taken,stage_cleared,item_inventory_data,monster_inventory_data = arena.arena(current_user,user_data, user_id, monster_inventory_data, item_inventory_data, monster_data)
         elif prompt.lower() == "heal":
             monster_inventory_data, user_data = healingfountain.healingfountain(current_user,user_id,user_data,monster_inventory_data, monster_data)
         elif prompt.lower() == "shop":
-            if current_user[3] == 'agent':
+            if utils.is_empty(current_user):
+                print("Anda belum login")
+                time.sleep(1)
+                utils.remove_x_line_above(2)
+            elif current_user[3] == 'agent':
                 user_data,item_inventory_data,monster_inventory_data,item_shop_data,monster_shop_data = shop.shop(current_user,user_id,user_data,item_inventory_data,monster_inventory_data,item_shop_data,monster_shop_data,monster_data)
             elif current_user[3] == 'admin':
                 item_shop_data, monster_shop_data = shop_management.shop_management(current_user,item_shop_data, monster_shop_data, monster_data)
@@ -50,3 +56,7 @@ if None not in (user_data, monster_data, monster_shop_data, monster_inventory_da
         elif prompt.lower() == "exit":
             exit.exit(user_data, monster_data, monster_shop_data, monster_inventory_data, item_shop_data, item_inventory_data)
             break
+        else:
+            print("Masukkan command yang benar!")
+            time.sleep(0.5)
+            utils.remove_x_line_above(2)

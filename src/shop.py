@@ -1,5 +1,17 @@
+import time
+
 from . import utils
 from . import inventory
+
+def print_shop():
+    print("""
+▄██████░██░░░██░▄█████▄░█████▄
+██░░░░░░██░░░██░██░░░██░██░░██
+▀█████▄░███████░██░░░██░█████▀
+░░░░░██░██░░░██░██░░░██░██░░░░
+██████▀░██░░░██░▀█████▀░██░░░░
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+""")
 
 def load_monster_shop(monster_shop_data,monster_data):
     monster_shop_dict = []
@@ -37,15 +49,19 @@ def load_item_shop(item_shop_data):
 def shop(current_user,user_id,user_data,item_inventory_data,monster_inventory_data,item_shop_data,monster_shop_data,monster_data):
     if utils.is_empty(current_user):
         print("Anda belum login")
+        time.sleep(1)
+        utils.remove_x_line_above(2)
         return user_data,item_inventory_data,monster_inventory_data,item_shop_data,monster_shop_data
     elif utils.strip(current_user[3]) != 'agent':
         print("Anda bukan Agent")
+        time.sleep(1)
+        utils.remove_x_line_above(2)
         return user_data,item_inventory_data,monster_inventory_data,item_shop_data,monster_shop_data
-    user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
-    item_shop_dict = load_item_shop(item_shop_data)
-    monster_shop_dict = load_monster_shop(monster_shop_data,monster_data)
-    while True:
-        print("Selamat datang di SHOP")
+    else:
+        print_shop()
+        user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
+        item_shop_dict = load_item_shop(item_shop_data)
+        monster_shop_dict = load_monster_shop(monster_shop_data,monster_data)
         while True:
             prompt = utils.strip(input("Pilih aksi (lihat/beli/keluar):"))
             if prompt == "lihat":
@@ -53,6 +69,7 @@ def shop(current_user,user_id,user_data,item_inventory_data,monster_inventory_da
             elif prompt == "beli":
                 user_data, item_inventory_data, item_shop_data, item_shop_dict, monster_inventory_data, monster_shop_data, monster_shop_dict = buy(user_id,user_index, user_data,item_inventory_data,monster_inventory_data,item_shop_data, monster_shop_data, item_shop_dict,monster_shop_dict)
             elif prompt == "keluar":
+                utils.clear_terminal()
                 return user_data,item_inventory_data,monster_inventory_data,item_shop_data,monster_shop_data
 
 def look(item_shop_dict,monster_shop_dict):
@@ -66,6 +83,9 @@ def look(item_shop_dict,monster_shop_dict):
             return
 
 def look_item(item_shop_dict):
+    utils.clear_terminal()
+    print_shop()
+    print(f"{'ID':<10}{'Type':<20}{'Stock':<10}{'Price':<10}")
     for item in item_shop_dict:
         if item['type'] == 'strength':
             item_name = 'Strength Potion'
@@ -77,11 +97,14 @@ def look_item(item_shop_dict):
             item_name = 'Healing Potion'
         elif item['type'] == 'monsterball':
             item_name = 'Monster Ball'
-        print(f"{item['id']}. {item_name} stock: {item['stock']} Price: {item['price']}")
+        print(f"{item['id']:<10}{item_name:<20}{item['stock']:<10}{item['price']:<10}")
 
 def look_monster(monster_shop_dict):
+    utils.clear_terminal()
+    print_shop()
+    print(f"{'ID':<10}{'Type':<20}{'ATK Power':<10}{'DEF Power':<10}{'HP':<10}{'Speed':<10}{'Stock':<10}{'Price':<10}")
     for monster in monster_shop_dict:
-        print(f"{monster['id']} {monster['type'].title()} ATK Power: {monster['atk_power']} DEF Power: {monster['def_power']} HP: {monster['hp']} Speed: {monster['speed']} Stock: {monster['stock']} Price {monster['price']}")
+        print(f"{monster['id']:<10} {monster['type']:<20}{monster['atk_power']:<10}{monster['def_power']:<10}{monster['hp']:<10}{monster['speed']:<10}{monster['stock']:<10}{monster['price']:<10}")
 
 def buy(user_id,user_index, user_data,item_inventory_data,monster_inventory_data,item_shop_data, monster_shop_data, item_shop_dict,monster_shop_dict):
     print(f"Jumlah OWCA Coins mu sekarang adalah {user_data[user_index][4]}")
@@ -93,25 +116,36 @@ def buy(user_id,user_index, user_data,item_inventory_data,monster_inventory_data
         elif prompt == "monster":
             user_data, monster_inventory_data, monster_shop_data, monster_shop_dict = buy_monster(user_id, user_index,user_data,monster_inventory_data,monster_shop_data, monster_shop_dict)
             break
+        else:
+            print("Masukkan input yang valid")
+            utils.remove_x_line_above(2)
     return user_data, item_inventory_data, item_shop_data, item_shop_dict, monster_inventory_data, monster_shop_data, monster_shop_dict
 
 def buy_item(user_id, user_index,user_data,item_inventory_data,item_shop_data, item_shop_dict):
     item_ids = [item_shop_dict[i]['id'] for i in range(len(item_shop_dict))]
     if len(item_ids) != 0:
         while True:
-            prompt = utils.strip(input("Masukkan id item: "))
+            prompt = utils.strip(input("Masukkan ID: "))
             if prompt in item_ids:
                 item_id = prompt
                 break
+            else:
+                print("Masukkan ID yang valid")
+                time.sleep(1)
+                utils.remove_x_line_above(2)
         item_index = utils.find_dict_index(item_shop_dict, key = 'id' , value = item_id)
         while True:
             prompt = utils.strip(input("Masukkan jumlah item: "))
             if utils.is_digit(prompt) and int(prompt) > 0:
                 if int(prompt) > item_shop_dict[item_index]['stock']:
                     print("Stock tidak cukup")
+                    time.sleep(1)
+                    utils.remove_x_line_above(2)
                     return user_data, item_inventory_data, item_shop_data, item_shop_dict
                 elif int(prompt) * item_shop_dict[item_index]['price'] > int(user_data[user_index][4]):
                     print("OC Anda tidak cukup")
+                    time.sleep(1)
+                    utils.remove_x_line_above(2)
                     return user_data, item_inventory_data, item_shop_data, item_shop_dict
                 else:
                     break
@@ -128,9 +162,17 @@ def buy_item(user_id, user_index,user_data,item_inventory_data,item_shop_data, i
                     item_inventory_data.append([user_id,item_shop_dict[item_index]['type'],str(amt_bought)])
                 user_data[user_index][4] = str(int(user_data[user_index][4]) - total_price)
                 item_shop_dict[item_index]['stock'] = item_shop_dict[item_index]['stock'] - amt_bought
+                utils.remove_xth_line_above(2)
+                time.sleep(2)
                 break
             elif prompt.lower() == 'n':
                 break
+            else:
+                print("Masukkan input yang valid")
+                time.sleep(1)
+                utils.remove_x_line_above(2)
+        utils.clear_terminal()
+        print_shop()
         item_shop_data = update_shop_data(item_shop_data,item_shop_dict,"item")
     return user_data, item_inventory_data, item_shop_data, item_shop_dict
 
@@ -138,29 +180,44 @@ def buy_monster(user_id, user_index,user_data,monster_inventory_data,monster_sho
     monster_ids = [monster_shop_dict[i]['id'] for i in range(len(monster_shop_dict))]
     if len(monster_ids) != 0:
         while True:
-            prompt = utils.strip(input("Masukkan id monster: "))
+            prompt = utils.strip(input("Masukkan ID: "))
             if prompt in monster_ids:
                 monster_id = prompt
                 break
+            else:
+                print("Masukkan ID yang valid")
+                time.sleep(1)
+                utils.remove_x_line_above(2)
         monster_index = utils.find_dict_index(monster_shop_dict, key = 'id' , value = monster_id)
         if monster_shop_dict[monster_index]['stock'] <= 0:
             print("Stock tidak cukup")
+            time.sleep(1)
+            utils.clear_terminal()
             return user_data, monster_inventory_data, monster_shop_data, monster_shop_dict
         elif int(user_data[user_index][4]) < monster_shop_dict[monster_index]['price']:
             print("OC Anda tidak cukup")
+            time.sleep(1)
+            utils.clear_terminal()
             return user_data, monster_inventory_data, monster_shop_data, monster_shop_dict
         else:
             while True:
                 prompt = utils.strip(input("Yakin? (Y/N): "))
                 if prompt.lower() == 'y':
+                    utils.remove_x_line_above(2)
                     print(f"Anda berhasil membeli {monster_shop_dict[monster_index]['type']} seharga {monster_shop_dict[monster_index]['price']}")
                     monster_inventory_data.append([user_id,monster_shop_dict[monster_index]['id'],'1',inventory.name_monster(user_id,monster_inventory_data), monster_shop_dict[monster_index]['hp']])
                     user_data[user_index][4] = str(int(user_data[user_index][4]) - int(monster_shop_dict[monster_index]['price']))
                     monster_shop_dict[monster_index]['stock'] = monster_shop_dict[monster_index]['stock'] - 1
-                    
+                    time.sleep(1.5)
                     break
                 elif prompt.lower() == 'n':
                     break
+                else:
+                    print("Masukkan input yang valid")
+                    time.sleep(1)
+                    utils.remove_x_line_above(2)
+            utils.clear_terminal()
+            print_shop()
             monster_shop_data = update_shop_data(monster_shop_data,monster_shop_dict,"monster")
         return user_data, monster_inventory_data, monster_shop_data, monster_shop_dict
 

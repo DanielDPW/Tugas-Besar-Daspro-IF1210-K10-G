@@ -1,3 +1,5 @@
+import sys
+import os
 def split(x: str, delimiter: str):
     lst = []
     string = ""
@@ -9,6 +11,21 @@ def split(x: str, delimiter: str):
             string = ""
     lst.append(string)
     return lst
+
+def remove_x_line_above(x : int):
+    for i in range(x):
+        sys.stdout.write("\033[F")
+        sys.stdout.write("\033[K")
+        sys.stdout.flush()
+
+def remove_xth_line_above(x : int):
+    for i in range(x):
+        sys.stdout.write("\033[F")
+    sys.stdout.write("\033[K")
+    sys.stdout.flush()
+
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def max(a: int, b: int) -> int:
     if a >= b:

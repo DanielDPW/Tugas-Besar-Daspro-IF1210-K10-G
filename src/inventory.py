@@ -1,5 +1,17 @@
+import time
+
 from . import utils
 
+def print_inventory():
+    print("""
+██████░██████▄░██░░░██░▄█████░██████▄░████████░▄█████▄░█████▄░██░░██
+░░██░░░██░░░██░██░░░██░██░░░░░██░░░██░░░░██░░░░██░░░██░██░░██░██░░██
+░░██░░░██░░░██░██░░░██░█████░░██░░░██░░░░██░░░░██░░░██░█████▀░▀████▀
+░░██░░░██░░░██░██░░██░░██░░░░░██░░░██░░░░██░░░░██░░░██░██░░██░░░██░░
+██████░██░░░██░▀███▀░░░▀█████░██░░░██░░░░██░░░░▀█████▀░██░░██░░░██░░
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+""")
+    
 def get_user_monsters(user_id : str, monster_inventory_data):
     user_monsters = []
     monster_inventory = utils.slice_matrix(monster_inventory_data, row_start = 1)
@@ -20,7 +32,7 @@ def load_user_monsters(user_id, monster_inventory_data, monster_data, battle = F
 
     for row in user_monsters:
         monster_index = utils.find_row(monster_data, index = 0, element = row[1])
-        if int(row[4]) > 0 and battle:
+        if int(row[4]) <= 0 and battle:
             continue
         monster_id = row[1]
         monster_level = row[2]
@@ -59,9 +71,17 @@ def name_monster(user_id, monster_inventory_data):
     while True:
         name = input("Nama monster: ")
         if len(name) == 0 or utils.is_space(name):
-            print("Name tidak boleh kosong")
+            print("Nama tidak boleh kosong")
+            time.sleep(1)
+            utils.remove_x_line_above(2)
+        elif len(name) > 20:
+            print("Nama tidak boleh melebihi 20 karakter")
+            time.sleep(1)
+            utils.remove_x_line_above(2)
         elif name in used_name:
             print("Nama sudah Anda pakai")
+            time.sleep(1)
+            utils.remove_x_line_above(2)
         else:
             contains_invalid_char = False
             for char in name:
@@ -69,16 +89,24 @@ def name_monster(user_id, monster_inventory_data):
                     contains_invalid_char = True
             if contains_invalid_char:
                 print("Name hanya berupa alfabet")
+                time.sleep(1)
+                utils.remove_x_line_above(2)
             else:
+                utils.remove_xth_line_above(1)
                 return name
 def inventory(current_user, user_id,user_data,item_inventory_data, monster_inventory_data,monster_data):
     if utils.is_empty(current_user):
         print("Anda belum login")
+        time.sleep(1)
+        utils.remove_x_line_above(2)
         return
     elif utils.strip(current_user[3]) != 'agent':
         print("Anda bukan Agent")
+        time.sleep(1)
+        utils.remove_x_line_above(2)
         return
     else:
+        print_inventory()
         while True:
             prompt = utils.strip(input("Mau lihat apa? (item/monster/keluar): "))
             if prompt == "item":
@@ -87,14 +115,21 @@ def inventory(current_user, user_id,user_data,item_inventory_data, monster_inven
                 show_monsters(user_id,user_data,monster_inventory_data, monster_data)
             elif prompt == "keluar":
                 break
+            else:
+                print("Masukkan input yang valid")
+                time.sleep(1)
+                utils.remove_x_line_above(2)
         
 def show_items(user_id, user_data,item_inventory_data):
+    utils.clear_terminal()
+    print_inventory()
     while True:
         print(f"Inventory (User ID: {user_id})")
         user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
         user_oc = user_data[user_index][4]
         print(f"Jumlah OWCA Coins Anda sekarang: {user_oc}")
         user_items = get_user_inventory(user_id,item_inventory_data)
+        print(f"{'ID':<10}{'Type':<20}{'Quantity':<10}")
         for i, user_item in enumerate(user_items):
             if user_item[1] == 'strength':
                 item_name = 'Strength Potion'
@@ -106,13 +141,16 @@ def show_items(user_id, user_data,item_inventory_data):
                 item_name = 'Healing Potion'
             elif user_item[1] == 'monsterball':
                 item_name = 'Monster Ball'
-            print(f"{str(i + 1)}. {item_name} Quantity: {user_item[2]}")
+            print(f"{str(i + 1):<10}{item_name:<20}{user_item[2]:<10}")
         options = [str(i + 1) for i in range(len(user_items))]
         while True:
             a = utils.strip(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
             if a in options:
+                utils.remove_xth_line_above(1)
                 item_desc(user_items, a)
             elif a == 'x':
+                utils.clear_terminal()
+                print_inventory()
                 return
 
 def item_desc(user_items,index):
@@ -143,20 +181,26 @@ def item_desc(user_items,index):
         print(f"Memasukkan monster musuh ke koleksimu")
 
 def show_monsters(user_id, user_data, monster_inventory_data, monster_data):
+    utils.clear_terminal()
+    print_inventory
     while True:
         print(f"Inventory (User ID: {user_id})")
         user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
         user_oc = user_data[user_index][4]
         print(f"Jumlah OWCA Coins Anda sekarang: {user_oc}")
         monster_dict = load_user_monsters(user_id,monster_inventory_data,monster_data)
+        print(f"{'ID':<10}{'Name':<20}{'Type':<20}{'Level':<10}{'HP':<10}")
         for i, monster in enumerate(monster_dict):
             print(f"{i + 1}. {utils.title(monster['name'])} (Type: {monster['type']} Level: {monster['level']} HP: {monster['hp']}/{monster['max_hp']}")
         options = [str(i + 1) for i in range(len(monster_dict))]
         while True:
             prompt = utils.strip(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))
             if prompt in options:
+                utils.remove_xth_line_above(1)
                 monster_desc(monster_dict, prompt)
             elif prompt == 'x':
+                utils.clear_terminal()
+                print_inventory()
                 return
 
 def monster_desc(monster_dict,index):
