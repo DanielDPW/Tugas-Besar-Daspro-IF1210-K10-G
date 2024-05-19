@@ -1,7 +1,74 @@
+import time
+
 from . import utils
 from . import rng
 from . import inventory
+from . import monster_ball
 
+def print_user_monster():
+    print("""
+⠀⠀⠀⡰⡏⠀⠀⠀⠀⠀⢀⣤⠛⣠⢇⠔⣇⣀⠴⠀⠀⠀⠀⠀⡤⡀⠀⠀⠀⠀
+⠀⠀⠸⠥⠵⣄⡀⠀⠀⠀⢣⣹⣠⠣⠈⣀⣉⠏⠀⠆⠀⠀⠀⠀⡀⠓⡀⠀⠀⠀
+⠀⠀⢰⠒⠈⡠⢈⡰⠒⠈⠉⠀⠀⠀⠀⠀⠀⠉⠘⠂⢄⡤⡖⠙⢅⠒⡇⠀⠀⠀
+⠀⠀⠀⠱⡉⢠⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢎⠂⠤⡰⠁⠀⠀⠀
+⠀⠀⠀⠀⡨⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢦⠊⠀⠀⠀⠀⠀
+⠀⠀⠀⢠⠁⢠⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠠⡦⠀⢸⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠸⡰⣘⠄⡏⢩⢆⣀⢦⣀⡶⣈⡹⠭⠽⠶⠾⠀⠘⠍⢺⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠣⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢉⣢⠤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠊⢹⠢⡀⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⠔⠁⡆⠀⠀⠀⠉⠀⣀⠀⠄⢀⡀⠀⠀⠀⠀⠀⠀⠇⠈⠢⡀⠀⠀⠀
+⠀⢀⠔⠁⠀⢰⠁⠀⠀⠀⡠⠊⠀⠀⠀⠀⠀⠑⠄⠀⠀⠀⠀⢸⠀⠀⠈⢆⠀⠀
+⢀⠃⠀⠀⠀⡌⠀⠀⠀⢰⠁⠀⠀⠀⠀⠀⠀⠀⠈⢆⠀⠀⠀⠀⡇⠀⠀⠀⠢⠀
+⢸⠀⠀⠀⢀⠃⠀⠀⢀⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢆⠀⠀⠀⢰⠀⠀⠀⠀⡇
+⠀⠑⠤⠄⢺⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡄⠀⠀⢸⢄⠀⠀⡠⠃
+⠀⠀⠀⠀⠘⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠃⠀⠀⢸⠀⠈⠁⠀⠀
+⠀⠀⠀⠀⠀⢃⠀⠀⠀⢃⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠃⠀⠀⡘⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠑⢄⠀⠀⠈⠁⠒⠂⠠⠤⠄⠒⠊⠁⠀⠀⠀⡐⠁⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠗⠢⢄⡀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠔⠊⡇⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠸⡀⠀⠀⢉⡱⠐⠒⠀⠈⠫⣀⣀⣀⣠⠁⠀⠀⠀⠀⠀⠀
+""")
+    
+def print_enemy_monster():
+    print("""
+              ,   .-'"'=;_  ,
+              |\.'-~`-.`-`;/|
+              \.` '.'~-.` './
+              (\`,__=-'__,'/)
+           _.-'-.( d\_/b ).-'-._
+         /'.-'   ' .---. '   '-.`\\
+       /'  .' (=    (_)    =) '.  `\\
+      /'  .',  `-.__.-.__.-'  ,'.  `\\
+     (     .'.   V       V  ; '.     )
+     (    |::  `-,__.-.__,-'  ::|    )
+     |   /|`:.               .:'|\\   |
+     |  / | `:.              :' |`\\  |
+     | |  (  :.             .:  )  | |
+     | |   ( `:.            :' )   | |
+     | |    \\ :.           .: /    | |
+     | |     \\`:.         .:'/     | |
+     ) (      `\\`:.     .:'/'      ) (
+     (  `)_     ) `:._.:' (     _(`  )
+     \\  ' _)  .'           `.  (_ `  /
+      \\  '_) /   .'"```"'.   \\ (_`  /
+       `'"`  \\  (         )  /  `"'`
+   ___        `.`.       .'.'        ___
+ .`   ``"""'''--`_)     (_'--'''"""``   `.
+(_(_(___...--'"'`         `'"'--...___)_)_)
+""")
+
+def randomize_enemy_level():
+    odds = rng.rng(1,15)
+    if odds == 1:
+        return 5
+    elif odds <= 3:
+        return 4
+    elif odds <= 6:
+        return 3
+    elif odds <= 10:
+        return 2
+    elif odds <= 15:
+        return 1    
+    
 def randomize_enemy(monster_data):
     monster_ids = []
 
@@ -29,7 +96,7 @@ def switch_monster(monster_dict, current_monster_index = None):
     for i in range(len(monster_dict)):
         if i != current_monster_index:
             monster_indices.append(str(i + 1))
-    print("Choose your monster")
+    print("Pilih monstermu")
     for i, monster in enumerate(monster_dict):
         print(f"{i + 1}. {monster['name']}")
 
@@ -37,22 +104,41 @@ def switch_monster(monster_dict, current_monster_index = None):
         x = utils.strip(input(">>> "))
         if x in monster_indices:
             while True:
-                y = utils.strip(input("Are you sure? (Y/N) "))
+                y = utils.strip(input("Apakah kamu yakin? (Y/N): "))
                 if y.lower() == 'y':
+                    utils.remove_xth_line_above(1)
                     break
                 elif y.lower() == 'n':
                     if current_monster_index == None:
-                        print("Please select a monster")
-                        x = utils.strip(input(">>> "))
+                        utils.remove_x_line_above(2)
+                        print("Pilih monster")
+                        while True:
+                            x = utils.strip(input(">>> "))
+                            if x not in monster_indices:
+                                print("Masukkan input yang valid")
+                                time.sleep(1)
+                                utils.remove_x_line_above(2)
+                            else:
+                                break
                     else:
+                        utils.remove_x_line_above(2)
                         return current_monster_index,monster_dict[current_monster_index],False
                 else:
-                    print("Invalid")
+                    print("Masukkan input yang valid")
+                    time.sleep(1)
+                    utils.remove_x_line_above(2)
+            
+            utils.clear_terminal()
+            print_user_monster()
             current_monster_index = int(x) - 1
+            print(f"{monster_dict[int(current_monster_index)]['name']}, Aku memilih kamu")
             break
         else:
-            print("Invalid")
-    
+            print("Masukkan input yang valid")
+            time.sleep(1)
+            utils.remove_x_line_above(2)
+    time.sleep(1.5)
+    utils.clear_terminal()
     return current_monster_index,monster_dict[current_monster_index],True
 
 def show_stat(monster,status_effect,current_monster_index):
@@ -114,9 +200,18 @@ def select_action(arena = False):
             print("5. Monster Ball")
         x = utils.strip(input(">>> "))
         if x in options:
+            if arena:
+                utils.remove_x_line_above(6)
+            else:
+                utils.remove_x_line_above(7)
             break
         else:
-            print("Invalid")
+            print("Masukkan input yang valid")
+            time.sleep(1)
+            if arena:
+                utils.remove_x_line_above(7)
+            else:
+                utils.remove_x_line_above(8)
     return x
 
 def select_potion(user_items,monster,current_monster_index,status_effect,monster_data):
@@ -141,12 +236,19 @@ def select_potion(user_items,monster,current_monster_index,status_effect,monster
                             user_items[strength_index][2] = user_items[strength_index][2] - 1
                             potion('atk_power',monster,current_monster_index,status_effect)
                             print(f"{monster['name']} meminum Strength Potion")
+                            time.sleep(1)
+                            utils.remove_x_line_above(8)
                             return True
                         else:
                             print(f"{monster['name']} sudah meminum Strength Potion")
+                            time.sleep(1)
+                            utils.remove_x_line_above(8)
                             return False
+                            
                     else:
                         print("Anda tidak memiliki Strength Potion")
+                        time.sleep(1)
+                        utils.remove_x_line_above(8)
                         return False
                     
                 elif x == '2':
@@ -155,12 +257,18 @@ def select_potion(user_items,monster,current_monster_index,status_effect,monster
                             user_items[speed_index][2] = user_items[speed_index][2] - 1
                             potion('speed',monster,current_monster_index,status_effect,50)
                             print(f"{monster['name']} meminum Speed Potion")
+                            time.sleep(1)
+                            utils.remove_x_line_above(8)
                             return True
                         else:
                             print(f"{monster['name']} sudah meminum Speed Potion")
+                            time.sleep(1)
+                            utils.remove_x_line_above(8)
                             return False
                     else:
                         print("Anda tidak memiliki Speed Potion")
+                        time.sleep(1)
+                        utils.remove_x_line_above(8)
                         return False
                     
                 elif x == '3':
@@ -169,12 +277,18 @@ def select_potion(user_items,monster,current_monster_index,status_effect,monster
                             user_items[resilience_index][2] = user_items[resilience_index][2] - 1
                             potion('def_power',monster,current_monster_index,status_effect,50)
                             print(f"{monster['name']} meminum Resilience Potion")
+                            time.sleep(1)
+                            utils.remove_x_line_above(8)
                             return True
                         else:
                             print(f"{monster['name']} sudah meminum Resilience Potion")
+                            time.sleep(1)
+                            utils.remove_x_line_above(8)
                             return False
                     else:
                         print("Anda tidak memiliki Resilience Potion")
+                        time.sleep(1)
+                        utils.remove_x_line_above(8)
                         return False
                     
                 elif x == '4':
@@ -184,23 +298,36 @@ def select_potion(user_items,monster,current_monster_index,status_effect,monster
                             monster['hp'] = heal(monster,monster_data)
                             status_effect[current_monster_index].append('healing')
                             print(f"{monster['name']} meminum Healing Potion")
+                            time.sleep(1)
+                            utils.remove_x_line_above(8)
                             return True
                         else:
                             print(f"{monster['name']} sudah meminum Healing Potion")
+                            time.sleep(1)
+                            utils.remove_x_line_above(8)
                             return False
                     else:
                         print("Anda tidak memiliki Healing Potion")
+                        time.sleep(1)
+                        utils.remove_x_line_above(8)
                         return False
-                else:
+                elif x == '5':
+                    time.sleep(1)
+                    utils.remove_x_line_above(7)
                     return False
 
             else:
-                print("Invalid")
+                print("Masukkan input yang valid")
+                time.sleep(1)
+                utils.remove_x_line_above(8)
+                
     else:
         print("Anda tidak memiliki potion")
+        time.sleep(1)
+        utils.remove_xth_line_above(1)
         return False
 
-def attack(attacker, defender) -> int:
+def attack(attacker, defender, monster, enemy, status_effect, current_monster_index) -> int:
 
     def calculate_increase(stat) -> str:
         if stat < 0:
@@ -219,20 +346,25 @@ def attack(attacker, defender) -> int:
     dodge_chance = max(speed_diff,0)
     
     print(f"Attack: {base_damage} ({calculate_increase(attack_multiplier - 100)}), Reduced by: {damage_reduction} ({defender['def_power']}%)")
+    time.sleep(1)
     if rng.rng(1,100) > dodge_chance:
         print(f"{attacker['name']} attacks {defender['name']} for {damage} damage.")
         defender['hp'] = max(defender['hp'] - damage, 0)
     else:
         print(f"{attacker['name']} attacks {defender['name']} but missed.")
+    
+    time.sleep(0.75)
+    utils.clear_terminal()
+    show_both_stat(monster, enemy,status_effect,current_monster_index)
 
     return damage
 
-def execute_turn(first,second):
-    first_damage = attack(first,second)
+def execute_turn(first,second, monster, enemy,status_effect, current_monster_index):
+    first_damage = attack(first,second, monster, enemy,status_effect, current_monster_index)
     if second['hp'] <= 0:
         print(f"{second['name']} fainted")
         return first_damage, 0
-    second_damage = attack(second,first)
+    second_damage = attack(second,first, monster, enemy,status_effect, current_monster_index)
     if first['hp'] <= 0:
         print(f"{first['name']} fainted")
         return first_damage, second_damage
@@ -264,76 +396,19 @@ def potion(status : str,monster,current_monster_index,status_effect,max_value = 
     else:
         monster[status] = int(1.05 * monster[status])
 
-def catch(user_id,enemy,monster_inventory_data):
-    odds = rng.rng(1,100)
-    if enemy['level'] == 1:
-        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 75):
-            print("Catch Successful")
-            name = inventory.name_monster(user_id,monster_inventory_data)
-            monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
-            enemy['hp'] = 0
-        else:
-            print("Monster lepas")
-    elif enemy['level'] == 2:
-        if odds < int(1-(enemy['hp']/enemy['max_hp']) *50):
-            print("Catch Successful")
-            name = inventory.name_monster(user_id,monster_inventory_data)
-            monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
-            enemy['hp'] = 0
-        else:
-            print("Monster lepas")
-    elif enemy['level'] == 3:
-        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 25):
-            print("Catch Successful")
-            name = inventory.name_monster(user_id,monster_inventory_data)
-            monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
-            enemy['hp'] = 0
-        else:
-            print("Monster lepas")
-    elif enemy['level'] == 4:
-        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 10):
-            print("Catch Successful")
-            name = inventory.name_monster(user_id,monster_inventory_data)
-            monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
-            enemy['hp'] = 0
-        else:
-            print("Monster lepas")
-    elif enemy['level'] == 5:
-        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 5):
-            print("Catch Successful")
-            name = inventory.name_monster(user_id,monster_inventory_data)
-            monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
-            enemy['hp'] = 0
-        else:
-            print("Monster lepas")
-
-def monster_ball(user_id,enemy,user_items,monster_inventory_data):
-    monster_ball_index = utils.find_row(user_items, 1, 'monsterball')
-    if monster_ball_index != -1 and user_items[monster_ball_index][2] > 0:
-        print(f"Monster Ball (Quantity: {user_items[monster_ball_index][2]})")
-        while True:
-            x = utils.strip(input("Catch? (Y/N) "))
-            if x.lower() == 'y':
-                user_items[monster_ball_index][2] = user_items[monster_ball_index][2] - 1
-                catch(user_id,enemy,monster_inventory_data)
-                return True
-            elif x.lower() == 'n':
-                return False
-            else:
-                print("Invalid")
-    else:
-        print("Anda tidak memiliki monster ball")
-        return False
-
 def battle(current_user,monster_level,user_data, user_id, monster_inventory_data, item_inventory_data, monster_data, arena, reward = None):
     total_damage_taken = 0
     total_damage_dealt = 0
     victory = False
     if utils.is_empty(current_user):
         print("Anda belum login")
+        time.sleep(1)
+        utils.remove_x_line_above(2)
         return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
     elif utils.strip(current_user[3]) != 'agent':
         print("Anda bukan Agent")
+        time.sleep(1)
+        utils.remove_x_line_above(2)
         return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
     else:
         monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data, battle = True)
@@ -341,25 +416,30 @@ def battle(current_user,monster_level,user_data, user_id, monster_inventory_data
         user_items = inventory.get_user_inventory(user_id,item_inventory_data)
         if utils.is_empty(monster_dict):
             print("Anda tidak memiliki monster yang bisa bertarung")
+            time.sleep(1)
+            utils.remove_x_line_above(2)
             return 0, 0, False, item_inventory_data,monster_inventory_data
         else:
+            
             status_effect = [[''] for i in range(len(monster_dict))]
             escape_attempt = 0
-            
+            print_enemy_monster()
+            print(f"RAWRRR, Monster {enemy['type']} telah muncul")
+            time.sleep(1.5)
             current_monster_index, monster, action_executed = switch_monster(monster_dict)
             while monster['hp'] > 0 and enemy['hp'] > 0:
+                utils.clear_terminal()
                 action_executed = False
                 show_both_stat(monster, enemy,status_effect,current_monster_index)
                 action = select_action(arena)
                 if action == '1':
-
                     if monster['speed'] > enemy['speed']:
-                        damage_dealt, damage_taken = execute_turn(monster,enemy)
+                        damage_dealt, damage_taken = execute_turn(monster,enemy,monster, enemy,status_effect, current_monster_index)
                         total_damage_dealt = total_damage_dealt + damage_dealt
                         total_damage_taken = total_damage_taken + damage_taken
 
                     elif monster['speed'] < enemy['speed']:
-                        damage_taken, damage_dealt = execute_turn(enemy,monster)
+                        damage_taken, damage_dealt = execute_turn(enemy,monster,monster, enemy,status_effect, current_monster_index)
                         total_damage_dealt = total_damage_dealt + damage_dealt
                         total_damage_taken = total_damage_taken + damage_taken
 
@@ -367,40 +447,50 @@ def battle(current_user,monster_level,user_data, user_id, monster_inventory_data
                         random_priority = rng.rng(1,2)
 
                         if random_priority == 1:
-                            damage_taken, damage_dealt = execute_turn(enemy,monster)
+                            damage_taken, damage_dealt = execute_turn(enemy,monster,monster, enemy,status_effect, current_monster_index)
                             total_damage_dealt = total_damage_dealt + damage_dealt
                             total_damage_taken = total_damage_taken + damage_taken
 
                         elif random_priority == 2:
-                            damage_dealt, damage_taken = execute_turn(monster,enemy)
+                            damage_dealt, damage_taken = execute_turn(monster,enemy,monster, enemy,status_effect, current_monster_index)
                             total_damage_dealt = total_damage_dealt + damage_dealt
                             total_damage_taken = total_damage_taken + damage_taken
+                    time.sleep(1.5)
 
                 elif action == '2':
-                    current_monster_index,monster,action_executed = switch_monster(monster_dict, current_monster_index)
-                    if action_executed:
-                        damage_taken = attack(enemy,monster)
-                        total_damage_taken = total_damage_taken + damage_taken
+                    if len(monster_dict) > 1:
+                        current_monster_index,monster,action_executed = switch_monster(monster_dict, current_monster_index)
+                    
+                        if action_executed:
+                            damage_taken = attack(enemy,monster,monster, enemy,status_effect, current_monster_index)
+                            total_damage_taken = total_damage_taken + damage_taken
+                    else:
+                        print("Kamu tidak memiliki monster lain")
+                    time.sleep(1.5)
                 
                 elif action == '3':
                     action_executed = select_potion(user_items,monster,current_monster_index,status_effect,monster_data)
                     if action_executed:
-                        damage_taken = attack(enemy,monster)
+                        damage_taken = attack(enemy,monster,monster, enemy,status_effect, current_monster_index)
                         total_damage_taken = total_damage_taken + damage_taken
+                    time.sleep(1.5)
 
                 elif action == '4':
                     if run(monster,enemy,escape_attempt):
                         break
                     else:
-                        damage_taken = attack(enemy,monster)
-                        total_damage_taken = total_damage_taken + damage_taken
                         print("Anda tidak bisa kabur")
+                        time.sleep(1)
+                        damage_taken = attack(enemy,monster,monster, enemy,status_effect, current_monster_index)
+                        total_damage_taken = total_damage_taken + damage_taken
+                    time.sleep(1.5)
                 
                 elif action == '5':
-                    action_executed = monster_ball(user_id,enemy,user_items,monster_inventory_data)
+                    action_executed = monster_ball.monster_ball(user_id,enemy,user_items,monster_inventory_data)
                     if enemy['hp'] != 0 and action_executed:
-                        damage_taken = attack(enemy,monster)
+                        damage_taken = attack(enemy,monster,monster, enemy,status_effect, current_monster_index)
                         total_damage_taken = total_damage_taken + damage_taken
+                    time.sleep(1.5)
             if enemy['hp'] <= 0:
                 print(f"Selamat Anda telah berhasil mengalahkan monster {enemy['type']}")
                 victory = True
@@ -418,6 +508,8 @@ def battle(current_user,monster_level,user_data, user_id, monster_inventory_data
             monster_dict = []
             user_items = []
             enemy = {}
+            time.sleep(2)
+            utils.clear_terminal()
             return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
 
 def update_item_inventory_data(user_id, user_items, item_inventory_data):
