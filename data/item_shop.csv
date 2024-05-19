@@ -1,6 +1,6 @@
 type;stock;price
 strength;10;15
-resilience;5;15
-healing;5;15
-speed;1;15
-monsterball;95;100
+resilience;10;15
+healing;10;15
+speed;10;15
+monsterball;10;100
