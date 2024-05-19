@@ -1,3 +1,5 @@
+import time
+
 from . import utils
 from . import battle
 from . import rng
@@ -9,9 +11,13 @@ def arena(current_user, user_data, user_id, monster_inventory_data, item_invento
     stage_cleared = 0
     if utils.is_empty(current_user):
         print("Anda belum login")
+        time.sleep(1)
+        utils.remove_x_line_above(2)
         return total_damage_dealt,total_damage_taken,stage_cleared,item_inventory_data,monster_inventory_data
     elif utils.strip(current_user[3]) != 'agent':
         print("Anda bukan Agent")
+        time.sleep(1)
+        utils.remove_x_line_above(2)
         return total_damage_dealt,total_damage_taken,stage_cleared,item_inventory_data,monster_inventory_data
     else:
         for i in range(5):
@@ -34,4 +40,6 @@ def arena(current_user, user_data, user_id, monster_inventory_data, item_invento
             print(f"Anda mendapat reward {reward} OWCA Coins")
         else:
             print("Anda tidak mendapat OWCA Coins")
+        time.sleep(3)
+        utils.clear_terminal()
         return total_damage_dealt,total_damage_taken,stage_cleared,item_inventory_data,monster_inventory_data

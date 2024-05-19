@@ -1,15 +1,32 @@
+import time
+
 from . import utils
 from . import inventory
 from . import battle
 
+def print_healing_fountain():
+    print("""
+██░░░██░▄█████░▄████▄░██░░░░░██████░██████▄░▄██████░░░██████░▄█████▄░██░░░██░██████▄░████████░▄████▄░██████░██████▄
+██░░░██░██░░░░░██░░██░██░░░░░░░██░░░██░░░██░██░░░░░░░░██░░░░░██░░░██░██░░░██░██░░░██░░░░██░░░░██░░██░░░██░░░██░░░██
+███████░█████░░██░░██░██░░░░░░░██░░░██░░░██░██░░███░░░█████░░██░░░██░██░░░██░██░░░██░░░░██░░░░██░░██░░░██░░░██░░░██
+██░░░██░██░░░░░██████░██░░░░░░░██░░░██░░░██░██░░░██░░░██░░░░░██░░░██░██░░░██░██░░░██░░░░██░░░░██████░░░██░░░██░░░██
+██░░░██░▀█████░██░░██░██████░██████░██░░░██░▀█████▀░░░██░░░░░▀█████▀░▀█████▀░██░░░██░░░░██░░░░██░░██░██████░██░░░██
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+""")
+    
 def healingfountain(current_user, user_id, user_data, monster_inventory_data, monster_data):
     if utils.is_empty(current_user):
         print("Anda belum login")
+        time.sleep(1)
+        utils.remove_x_line_above(2)
         return monster_inventory_data, user_data
     elif utils.strip(current_user[3]) != 'agent':
         print("Anda bukan Agent")
+        time.sleep(1)
+        utils.remove_x_line_above(2)
         return monster_inventory_data, user_data
     else:
+        print_healing_fountain()
         user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
         print(f"Jumlah OWCA Coins Anda sekarang adalah {user_data[user_index][4]}")
         monster_dict = inventory.load_user_monsters(user_id, monster_inventory_data, monster_data)
@@ -31,9 +48,18 @@ def healingfountain(current_user, user_id, user_data, monster_inventory_data, mo
                         for monster in monster_dict:
                             if monster['hp'] != monster['max_hp']:
                                 monster['hp'] = monster['max_hp']
+                        print("Monster Anda telah disembuhkan")
                         monster_inventory_data = battle.update_monster_inventory_data(user_id,monster_dict, monster_inventory_data)
                         break
                     else:
                         print("OC Anda tidak cukup")
                         break
-            return monster_inventory_data, user_data
+                elif prompt.lower() == 'n':
+                    break
+                else:
+                    print("Masukkan input yang valid")
+                    time.sleep(1)
+                    utils.remove_x_line_above(2)
+        time.sleep(1)
+        utils.clear_terminal()
+        return monster_inventory_data, user_data

@@ -1,1 +1,6 @@
 user_id;type;quantity
+3;strength;12
+3;speed;19
+3;healing;15
+3;resilience;15
+3;monsterball;5

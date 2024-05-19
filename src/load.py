@@ -1,8 +1,19 @@
 import os
 import argparse
+import time
 
 from . import csv_parser
+from . import utils
 
+def print_welcome_to_owca():
+    print("""
+██░██░██░▄█████░██░░░░░▄█████░▄█████▄░▄██▄▄██▄░▄█████░░░████████░▄█████▄░░░▄█████▄░░░░██░██░██░░░░▄█████░░░░▄████▄░░░
+██░██░██░██░░░░░██░░░░░██░░░░░██░░░██░██░██░██░██░░░░░░░░░░██░░░░██░░░██░░░██░░░██░░░░██░██░██░░░░██░░░░░░░░██░░██░░░
+██░██░██░█████░░██░░░░░██░░░░░██░░░██░██░██░██░█████░░░░░░░██░░░░██░░░██░░░██░░░██░░░░██░██░██░░░░██░░░░░░░░██░░██░░░
+██░██░██░██░░░░░██░░░░░██░░░░░██░░░██░██░██░██░██░░░░░░░░░░██░░░░██░░░██░░░██░░░██░░░░██░██░██░░░░██░░░░░░░░██████░░░
+▀██▀▀██▀░▀█████░██████░▀█████░▀█████▀░██░██░██░▀█████░░░░░░██░░░░▀█████▀░░░▀█████▀░██░▀██▀▀██▀░██░▀█████░██░██░░██░██
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+""")
 def load():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('nama_folder', help='Nama folder tempat data tersimpan')
@@ -20,7 +31,9 @@ def load():
             item_shop_data = csv_parser.parse_csv(directory + '/item_shop.csv')
             item_inventory_data = csv_parser.parse_csv(directory + '/item_inventory.csv')
             if None not in (user_data, monster_data, monster_shop_data, monster_inventory_data, item_shop_data, item_inventory_data):
-                print("Selamat datang di Program OWCA")
+                print_welcome_to_owca()
+                time.sleep(1.5)
+                utils.clear_terminal()
             return user_data, monster_data, monster_shop_data, monster_inventory_data, item_shop_data, item_inventory_data
         else:
             print(f"Folder {directory} tidak ditemukan")
