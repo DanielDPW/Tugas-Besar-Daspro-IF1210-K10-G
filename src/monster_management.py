@@ -1,7 +1,8 @@
 import time
-
 from typing import *
+
 from . import utils
+from .types import *
 
 def print_monster_management():
     print("""
@@ -13,7 +14,7 @@ def print_monster_management():
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 """)
     
-def monster_management(current_user, monster_data, monster_inventory_data, monster_shop_data):
+def monster_management(current_user : Array, monster_data : Matrix, monster_inventory_data : Matrix, monster_shop_data : Matrix) -> Tuple[Matrix, Matrix, Matrix]:
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)
@@ -48,7 +49,7 @@ def monster_management(current_user, monster_data, monster_inventory_data, monst
                 time.sleep(1)
                 utils.remove_x_line_above(6)
 
-def generate_monster_id(monster_data):
+def generate_monster_id(monster_data : Matrix) -> str:
     existing_id = utils.ascending_sort([monster_data[i][0] for i in range(1, len(monster_data)) if not utils.is_space(monster_data[i][0])])
     num = 1
     while str(num) in existing_id:
@@ -56,14 +57,14 @@ def generate_monster_id(monster_data):
     return str(num)
 
 
-def show_monster(monster_data):
+def show_monster(monster_data : Matrix):
     utils.clear_terminal()
     print_monster_management()
     print(f"{'ID':<10}{'Type':<20}{'ATK Power':<10} {'DEF Power':<10}{'HP':<10}{'Speed':<10}")
     for row in utils.slice_matrix(monster_data,row_start = 1):
         print(f"{row[0]:<10} {row[1]:<20} {row[2]:<10} {row[3]:<10} {row[4]:<10} {row[5]:<10}")
 
-def add_type(monster_data):
+def add_type(monster_data : Matrix) -> str:
     valid_characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     while True:
         prompt = utils.strip(input("Masukkan Type: "))
@@ -91,7 +92,7 @@ def add_type(monster_data):
             else:
                 return prompt
 
-def add_stat(stat : str, idx : int, min : Optional[int] = None, max : Optional[int] = None):
+def add_stat(stat : str, min : Optional[int] = None, max : Optional[int] = None) -> str:
     while True:
         prompt = utils.strip(input(f"Masukkan {stat}{f' {min} - {max}' if min is not None and max is not None else ''}: "))
         if len(prompt) == 0 or utils.is_space(prompt):
@@ -110,12 +111,12 @@ def add_stat(stat : str, idx : int, min : Optional[int] = None, max : Optional[i
             break
     return prompt
 
-def add_monster(monster_data):
+def add_monster(monster_data : Matrix) -> Matrix:
     type = add_type(monster_data)
-    atk_power = add_stat("ATK Power",idx = 2, min = 1, max = 9999999999)
-    def_power = add_stat("DEF Power",idx = 3, min = 0, max = 50)
-    hp = add_stat("HP",idx = 4, min = 1, max = 9999999999)
-    speed = add_stat("Speed",idx = 5, min = 0, max = 50)
+    atk_power = add_stat("ATK Power", min = 1, max = 9999999999)
+    def_power = add_stat("DEF Power", min = 0, max = 50)
+    hp = add_stat("HP", min = 1, max = 9999999999)
+    speed = add_stat("Speed", min = 0, max = 50)
     while True:
         prompt = utils.strip(input("Tambahkan Monster ke database? (Y/N): "))
         if prompt.lower() == 'y':
@@ -134,7 +135,7 @@ def add_monster(monster_data):
     print_monster_management()
     return monster_data
 
-def remove_monster(monster_data, monster_inventory_data, monster_shop_data):
+def remove_monster(monster_data : Matrix, monster_inventory_data : Matrix, monster_shop_data : Matrix) -> Tuple[Matrix, Matrix, Matrix]:
     monster_ids = [monster_data[i][0] for i in range(1, len(monster_data))]
     if len(monster_ids) == 0:
         print("Tidak ada monster di database")

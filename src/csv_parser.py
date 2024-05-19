@@ -1,6 +1,9 @@
 from . import utils
+from typing import *
 
-def parse_csv(csv):
+from .types import *
+
+def parse_csv(csv : str) -> Matrix:
     with open(csv, 'r') as file:
         headers = []
         found_headers = False
@@ -12,12 +15,12 @@ def parse_csv(csv):
             else:
                 row = utils.split(utils.strip(line), ';')
                 if len(row) != len(headers):
-                    print("Some data is missing or exceeds the header columns!")
+                    print("File tidak dapat diproses lebih lanjut karena tidak sesuai dengan header!")
                     return None
                 data.append(row)
     return data
 
-def generate_csv(matrix, csv):
+def generate_csv(matrix : Matrix, csv : str):
     with open(csv, 'w') as file:
 
         for row in matrix:

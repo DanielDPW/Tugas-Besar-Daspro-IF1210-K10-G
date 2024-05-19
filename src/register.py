@@ -1,7 +1,9 @@
 import time
+from typing import *
 
 from . import utils
 from . import inventory
+from .types import *
 
 def check_valid_characters(x : str) -> bool:
     valid_character = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-"
@@ -13,14 +15,14 @@ def check_valid_characters(x : str) -> bool:
                 return False
         return True
 
-def generate_user_id(user_data):
+def generate_user_id(user_data : Matrix) -> str:
     existing_id = utils.ascending_sort([user_data[i][0] for i in range(1, len(user_data)) if not utils.is_space(user_data[i][0])])
     num = 1
     while str(num) in existing_id:
         num = num + 1
     return str(num)
 
-def register(user_data, current_user, monster_data, monster_inventory_data):
+def register(user_data : Matrix, current_user : Matrix, monster_data : Matrix, monster_inventory_data : Matrix) -> Tuple[Matrix, Matrix]:
     if not utils.is_empty(current_user):
         print(f"Anda telah login dengan username {current_user[1]}, silahkan lakukan 'LOGOUT' sebelum melakukan register.")
         time.sleep(1)
@@ -62,7 +64,7 @@ def register(user_data, current_user, monster_data, monster_inventory_data):
     
     return user_data, monster_inventory_data
 
-def choose_starter(user_id, monster_data, monster_inventory_data):
+def choose_starter(user_id : str, monster_data : Matrix, monster_inventory_data : Matrix):
     monster_list = utils.slice_matrix(monster_data,row_start = 1)
     if len(monster_list) == 0:
         print("Tidak ada monster di database")

@@ -1,6 +1,8 @@
 import time
+from typing import *
 
 from . import utils
+from .types import *
 
 def print_inventory():
     print("""
@@ -12,7 +14,7 @@ def print_inventory():
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 """)
     
-def get_user_monsters(user_id : str, monster_inventory_data):
+def get_user_monsters(user_id : str, monster_inventory_data : Matrix) -> Matrix:
     user_monsters = []
     monster_inventory = utils.slice_matrix(monster_inventory_data, row_start = 1)
     int_data = ['level','hp']
@@ -26,7 +28,7 @@ def get_user_monsters(user_id : str, monster_inventory_data):
     
     return user_monsters
 
-def load_user_monsters(user_id, monster_inventory_data, monster_data, battle = False):
+def load_user_monsters(user_id : str, monster_inventory_data : Matrix, monster_data : Matrix, battle : bool = False) -> DictList:
     monster_dict = []
     user_monsters = get_user_monsters(user_id, monster_inventory_data)
 
@@ -49,7 +51,7 @@ def load_user_monsters(user_id, monster_inventory_data, monster_data, battle = F
         
     return monster_dict
 
-def get_user_inventory(user_id : str, item_inventory_data):
+def get_user_inventory(user_id : str, item_inventory_data : Matrix) -> Matrix:
     user_items = []
     item_inventory = utils.slice_matrix(item_inventory_data, row_start = 1)
     int_data = ['quantity']
@@ -64,7 +66,7 @@ def get_user_inventory(user_id : str, item_inventory_data):
     
     return user_items
 
-def name_monster(user_id, monster_inventory_data):
+def name_monster(user_id : str, monster_inventory_data : Matrix) -> str:
     valid_characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     user_monsters = get_user_monsters(user_id,monster_inventory_data)
     used_name = [user_monsters[i][3] for i in range(len(user_monsters))]
@@ -94,7 +96,7 @@ def name_monster(user_id, monster_inventory_data):
             else:
                 utils.remove_xth_line_above(1)
                 return name
-def inventory(current_user, user_id,user_data,item_inventory_data, monster_inventory_data,monster_data):
+def inventory(current_user : Array, user_id : str, user_data : Matrix, item_inventory_data : Matrix, monster_inventory_data : Matrix, monster_data : Matrix):
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)
@@ -121,7 +123,7 @@ def inventory(current_user, user_id,user_data,item_inventory_data, monster_inven
                 time.sleep(1)
                 utils.remove_x_line_above(2)
         
-def show_items(user_id, user_data,item_inventory_data):
+def show_items(user_id : str, user_data : Matrix, item_inventory_data : Matrix):
     utils.clear_terminal()
     print_inventory()
     while True:
@@ -154,7 +156,7 @@ def show_items(user_id, user_data,item_inventory_data):
                 print_inventory()
                 return
 
-def item_desc(user_items,index):
+def item_desc(user_items : Matrix,index : int):
     index = int(index)
     item = user_items[index - 1]
     if item[1] == 'strength':
@@ -181,7 +183,7 @@ def item_desc(user_items,index):
     elif item[1] == 'monsterball':
         print(f"Memasukkan monster musuh ke koleksimu")
 
-def show_monsters(user_id, user_data, monster_inventory_data, monster_data):
+def show_monsters(user_id : str, user_data : Matrix, monster_inventory_data : Matrix, monster_data : Matrix):
     utils.clear_terminal()
     print_inventory
     while True:
@@ -204,7 +206,7 @@ def show_monsters(user_id, user_data, monster_inventory_data, monster_data):
                 print_inventory()
                 return
 
-def monster_desc(monster_dict,index):
+def monster_desc(monster_dict : DictList, index : int):
     index = int(index) - 1
     monster = monster_dict[index]
     

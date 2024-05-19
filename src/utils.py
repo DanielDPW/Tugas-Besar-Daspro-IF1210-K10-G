@@ -1,6 +1,10 @@
 import sys
 import os
-def split(x: str, delimiter: str):
+
+from typing import *
+from .types import *
+
+def split(x: str, delimiter: str) -> Array:
     lst = []
     string = ""
     for i in range(len(x)):
@@ -57,19 +61,19 @@ def is_int(string : str) -> bool:
             return False
     return True
 
-def is_in_column(matrix, index : int, x : str) -> bool:
+def is_in_column(matrix : Matrix, index : int, x : str) -> bool:
     for row in matrix:
         if x == row[index]:
             return True
     return False
 
-def is_in_row(matrix, index : int, x : str) -> bool:
+def is_in_row(matrix : Matrix, index : int, x : str) -> bool:
     if x in matrix[index]:
         return True
     else:
         return False
 
-def is_empty(array) -> bool:
+def is_empty(array : Array) -> bool:
     if len(array) == 0:
         return True
     for element in array:
@@ -78,19 +82,19 @@ def is_empty(array) -> bool:
     return True
 
 
-def row_length(matrix) -> int:
+def row_length(matrix : Matrix) -> int:
     if matrix:
         return len(matrix[0])
     else:
         return 0
 
-def column_length(matrix) -> int:
+def column_length(matrix : Matrix) -> int:
     if matrix:
         return len(matrix)
     else:
         return 0
 
-def remove_empty_row(matrix):
+def remove_empty_row(matrix : Matrix) -> Matrix:
     new_matrix = []
 
     for row in matrix:
@@ -99,7 +103,7 @@ def remove_empty_row(matrix):
 
     return new_matrix
 
-def copy_matrix(matrix):
+def copy_matrix(matrix : Matrix) -> Matrix:
     new_matrix = [[None] * len(matrix[0]) for i in range(len(matrix))]
 
     for i in range(len(matrix)):
@@ -108,7 +112,7 @@ def copy_matrix(matrix):
 
     return new_matrix
 
-def copy_array(array):
+def copy_array(array : Array) -> Array:
     new_array = []
     
     for i in range(len(array)):
@@ -116,17 +120,17 @@ def copy_array(array):
     
     return new_array
 
-def remove_index(array : list, index : int) -> list:
+def remove_index(array : Array, index : int) -> Array:
     new_array = []
     for i in range(len(array)):
         if i != index:
             new_array.append(array[i])
     return new_array
 
-def remove_value(array : list, value : str):
+def remove_value(array : Array, value : str) -> Array:
     return [item for item in array if item != value]
 
-def remove_row(matrix, index = None, element = None):
+def remove_row(matrix : Matrix, index : Optional[int] = None, element : Optional[str] = None) -> Matrix:
     new_matrix = []
     
     if index is not None and element is None:
@@ -146,7 +150,7 @@ def remove_row(matrix, index = None, element = None):
 
     return new_matrix
 
-def copy_row(matrix, index = None, element = None):
+def copy_row(matrix : Matrix, index : Optional[int] = None, element : Optional[str] = None) -> Matrix:
     new_matrix = []
     
     if index is not None and element is None:
@@ -166,7 +170,7 @@ def copy_row(matrix, index = None, element = None):
 
     return new_matrix
 
-def slice_array(array, start = None, stop = None, step = None):
+def slice_array(array : Array, start : Optional[int] = None, stop : Optional[int] = None, step : Optional[int] = None) -> Array:
     if start is None:
         start = 0
     if stop is None:
@@ -180,7 +184,7 @@ def slice_array(array, start = None, stop = None, step = None):
 
     return new_array
 
-def slice_matrix(matrix, row_start = None, row_stop = None, row_step = None, col_start = None, col_stop = None, col_step = None):
+def slice_matrix(matrix : Matrix, row_start : Optional[int] = None, row_stop : Optional[int] = None, row_step : Optional[int] = None, col_start : Optional[int] = None, col_stop : Optional[int] = None, col_step : Optional[int] = None) -> Matrix:
     if row_start is None:
         row_start = 0
     if row_stop is None:
@@ -203,7 +207,7 @@ def slice_matrix(matrix, row_start = None, row_stop = None, row_step = None, col
 
     return new_matrix
 
-def is_space(x):
+def is_space(x : str) -> bool:
     whitespace_chars = [' ', '\t', '\n', '\r', '\f', '\v']
     if len(x) == 0:
         return True
@@ -219,31 +223,31 @@ def is_digit(x: str) -> bool:
             return False
     return True
 
-def is_in_dict(dict_list, key : str, value : str) -> bool:
+def is_in_dict(dict_list : DictList, key : str, value : str) -> bool:
     for dictionary in dict_list:
         if key in dictionary and dictionary[key] == value:
             return True
     return False
 
-def find_row(matrix, index : int, element : str) -> int:
+def find_row(matrix : Matrix, index : int, element : str) -> int:
     for i, row in enumerate(matrix):
         if index <= len(row) and row[index] == element:
             return i
     return -1
 
-def find_dict_index(dict_list, key: str, value: str) -> int:
+def find_dict_index(dict_list : DictList, key: str, value: str) -> int:
     for i, dictionary in enumerate(dict_list):
         if key in dictionary and dictionary[key] == value:
             return i
     return -1
 
-def copy_dict(dict):
+def copy_dict(dict : Dictionary) -> Dictionary:
     new_dict = {}
     for key in dict:
         new_dict[key] = dict[key]
     return new_dict 
 
-def ascending_sort(array):
+def ascending_sort(array : Array) -> Array:
     n = len(array)
 
     for i in range(n - 1):
@@ -257,7 +261,7 @@ def ascending_sort(array):
     
     return array
 
-def descending_sort(array):
+def descending_sort(array : Array) -> Array:
     n = len(array)
 
     for i in range(n - 1):

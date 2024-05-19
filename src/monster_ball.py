@@ -1,10 +1,12 @@
 import time
+from typing import *
 
 from . import rng
 from . import inventory
 from . import utils
+from .types import *
 
-def catch(user_id,enemy,monster_inventory_data):
+def catch(user_id : str,enemy : Dictionary, monster_inventory_data : Matrix):
     odds = rng.rng(1,100)
     if enemy['level'] == 1:
         if odds < int((1-(enemy['hp']/enemy['max_hp'])) * 75):
@@ -47,7 +49,7 @@ def catch(user_id,enemy,monster_inventory_data):
         else:
             print("Monster lepas dari Monster Ball")
 
-def monster_ball(user_id,enemy,user_items,monster_inventory_data):
+def monster_ball(user_id : str, enemy : Dictionary, user_items : Matrix, monster_inventory_data : Matrix) -> bool:
     monster_ball_index = utils.find_row(user_items, 1, 'monsterball')
     if monster_ball_index != -1 and user_items[monster_ball_index][2] > 0:
         print(f"Monster Ball (Quantity: {user_items[monster_ball_index][2]})")
