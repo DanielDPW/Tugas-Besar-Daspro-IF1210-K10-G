@@ -1,8 +1,10 @@
 import time
+from typing import *
 
 from . import utils
 from . import inventory
 from . import battle
+from .types import *
 
 def print_healing_fountain():
     print("""
@@ -14,7 +16,7 @@ def print_healing_fountain():
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 """)
     
-def healingfountain(current_user, user_id, user_data, monster_inventory_data, monster_data):
+def healingfountain(current_user : Array, user_id : str, user_data : Matrix, monster_inventory_data : Matrix, monster_data : Matrix) -> Tuple[Matrix, Matrix]:
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)

@@ -1,7 +1,9 @@
 import time
+from typing import *
 
 from . import utils
 from . import shop
+from .types import *
 
 def print_shop_management():
     print("""
@@ -12,7 +14,7 @@ def print_shop_management():
 ██████▀░██░░░██░▀█████▀░██░░░░░░░██░██░██░██░░██░██░░░██░██░░██░▀█████▀░▀█████░██░██░██░▀█████░██░░░██░░░░██░░░
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 """)
-def shop_management(current_user,item_shop_data, monster_shop_data, monster_data):
+def shop_management(current_user : Array, item_shop_data : Matrix, monster_shop_data : Matrix, monster_data : Matrix) -> Tuple[Matrix, Matrix]:
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)
@@ -46,7 +48,7 @@ def shop_management(current_user,item_shop_data, monster_shop_data, monster_data
                 time.sleep(1)
                 utils.remove_x_line_above(2)
 
-def add(item_shop_data, monster_shop_data, monster_data, item_shop_dict,monster_shop_dict):
+def add(item_shop_data : Matrix, monster_shop_data : Matrix, monster_data : Matrix, item_shop_dict : DictList, monster_shop_dict : DictList) -> Tuple[Matrix, Dictionary, Matrix, Dictionary]:
     while True:
         prompt = utils.strip(input("Mau menambah apa? (item/monster): "))
         if prompt == "item":
@@ -61,7 +63,7 @@ def add(item_shop_data, monster_shop_data, monster_data, item_shop_dict,monster_
             utils.remove_x_line_above(2)
     return item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict
 
-def add_item(item_shop_data, item_shop_dict):
+def add_item(item_shop_data : Matrix, item_shop_dict : DictList) -> Tuple[Matrix, DictList]:
     unadded_item_dict = load_unadded_item(item_shop_dict)
     if len(unadded_item_dict) == 0:
         print("Semua item sudah ada di shop")
@@ -113,7 +115,7 @@ def add_item(item_shop_data, item_shop_dict):
         item_shop_dict = shop.load_item_shop(item_shop_data)
         return item_shop_data, item_shop_dict
 
-def add_input_id_stock_price(ids):
+def add_input_id_stock_price(ids : Array) -> Tuple[str,str,str]:
     while True:
         prompt = utils.strip(input("Masukkan ID: "))
         if prompt not in ids:
@@ -151,7 +153,7 @@ def add_input_id_stock_price(ids):
     price = prompt
     return id, stock, price
 
-def add_monster(monster_shop_data, monster_data, monster_shop_dict):
+def add_monster(monster_shop_data : Matrix, monster_data : Matrix, monster_shop_dict : DictList) -> Tuple[Matrix, DictList]:
     unadded_monster_dict = load_unadded_monster(monster_shop_dict,monster_data)
     if len(unadded_monster_dict) == 0:
         print("Semua monster sudah ada di shop")
@@ -184,7 +186,7 @@ def add_monster(monster_shop_data, monster_data, monster_shop_dict):
         monster_shop_dict = shop.load_monster_shop(monster_shop_data,monster_data)
         return monster_shop_data, monster_shop_dict
 
-def load_unadded_monster(monster_shop_dict,monster_data):
+def load_unadded_monster(monster_shop_dict : DictList, monster_data : Matrix) -> DictList:
     unadded_monster_dict = []
 
     for row in utils.slice_matrix(monster_data,row_start = 1):
@@ -194,7 +196,7 @@ def load_unadded_monster(monster_shop_dict,monster_data):
             unadded_monster_dict.append(monster)
     return unadded_monster_dict
 
-def load_unadded_item(item_shop_dict):
+def load_unadded_item(item_shop_dict : DictList) -> DictList:
     unadded_item_dict = []
     item_list = ['strength', 'speed', 'resilience', 'healing', 'monsterball']
 
@@ -209,7 +211,7 @@ def load_unadded_item(item_shop_dict):
 
     return unadded_item_dict
 
-def change(item_shop_data, monster_shop_data, item_shop_dict,monster_shop_dict):
+def change(item_shop_data : Matrix, monster_shop_data : Matrix, item_shop_dict : DictList, monster_shop_dict : DictList) -> Tuple[Matrix, DictList, Matrix, DictList]:
     while True:
         prompt = utils.strip(input("Mau ubah apa? (item/monster): "))
         if prompt == "item":
@@ -224,7 +226,7 @@ def change(item_shop_data, monster_shop_data, item_shop_dict,monster_shop_dict):
             utils.remove_x_line_above(2)
     return item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict
 
-def edit_input_id_stock_price(ids):
+def edit_input_id_stock_price(ids : Array) -> Tuple[str, str, str]:
     while True:
         prompt = utils.strip(input("Masukkan ID: "))
         if prompt not in ids:
@@ -266,7 +268,7 @@ def edit_input_id_stock_price(ids):
     price = prompt
     return id, stock, price
 
-def edit(shop_type : str, shop_data, shop_dict):
+def edit(shop_type : str, shop_data : Matrix, shop_dict : DictList) -> Tuple[Matrix, DictList]:
     ids = [shop_dict[i]['id'] for i in range(len(shop_dict))]
     if len(ids) == 0:
         print(f"Tidak ada {shop_type} di shop")
@@ -328,7 +330,7 @@ def edit(shop_type : str, shop_data, shop_dict):
     shop_data = shop.update_shop_data(shop_data, shop_dict, shop_type)
     return shop_data, shop_dict
 
-def remove(item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict, monster_data):
+def remove(item_shop_data : Matrix, item_shop_dict : DictList, monster_shop_data : Matrix, monster_shop_dict : DictList, monster_data : Matrix) -> Tuple[Matrix, DictList, Matrix, DictList]:
     while True:
         prompt = utils.strip(input("Mau hapus apa? (item/monster): "))
         if prompt == "item":
@@ -343,7 +345,7 @@ def remove(item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict,
             utils.remove_x_line_above(2)
     return item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict
 
-def delete(shop_type,shop_data,shop_dict,monster_data):
+def delete(shop_type : str, shop_data : Matrix ,shop_dict : DictList, monster_data : Matrix) -> Tuple[Matrix, DictList]:
     if len(shop_dict) == 0:
         print(f"Tidak ada {shop_type} yang bisa dihapus")
         time.sleep(1)

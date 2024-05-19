@@ -1,9 +1,11 @@
 import os
 import argparse
 import time
+from typing import *
 
 from . import csv_parser
 from . import utils
+from .types import *
 
 def print_welcome_to_owca():
     print("""
@@ -14,7 +16,7 @@ def print_welcome_to_owca():
 ▀██▀▀██▀░▀█████░██████░▀█████░▀█████▀░██░██░██░▀█████░░░░░░██░░░░▀█████▀░░░▀█████▀░██░▀██▀▀██▀░██░▀█████░██░██░░██░██
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 """)
-def load():
+def load() -> Tuple[Optional[Matrix], Optional[Matrix], Optional[Matrix], Optional[Matrix], Optional[Matrix], Optional[Matrix]]:
     argparser = argparse.ArgumentParser()
     argparser.add_argument('nama_folder', help='Nama folder tempat data tersimpan')
     args = argparser.parse_args()

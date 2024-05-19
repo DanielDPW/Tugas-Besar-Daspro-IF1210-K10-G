@@ -1,7 +1,10 @@
 import time
-from . import utils
+from typing import *
 
-def login(user_data, current_user):
+from . import utils
+from .types import *
+
+def login(user_data : Matrix, current_user : Array) -> Tuple[Array, Optional[str]]:
     if not utils.is_empty(current_user):
         print(f"Anda telah login dengan username {current_user[1]}, silahkan lakukan 'LOGOUT' sebelum melakukan register.")
         time.sleep(1)
@@ -45,7 +48,7 @@ def login(user_data, current_user):
             return current_user,user_id
         
 
-def logout(current_user):
+def logout(current_user : Array) -> Tuple[Array, str]:
     if utils.is_empty(current_user):
         print("Logout gagal!")
         print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")

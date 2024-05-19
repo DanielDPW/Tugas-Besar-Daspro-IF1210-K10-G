@@ -1,9 +1,11 @@
 import time
+from typing import *
 
 from . import utils
 from . import rng
 from . import inventory
 from . import monster_ball
+from .types import *
 
 def print_user_monster():
     print("""
@@ -56,7 +58,7 @@ def print_enemy_monster():
 (_(_(___...--'"'`         `'"'--...___)_)_)
 """)
 
-def randomize_enemy_level():
+def randomize_enemy_level() -> int:
     odds = rng.rng(1,15)
     if odds == 1:
         return 5
@@ -69,7 +71,7 @@ def randomize_enemy_level():
     elif odds <= 15:
         return 1    
     
-def randomize_enemy(monster_data):
+def randomize_enemy(monster_data : int) -> int:
     monster_ids = []
 
     for i in range(1, len(monster_data)):
@@ -78,7 +80,7 @@ def randomize_enemy(monster_data):
 
     return monster_id
 
-def load_enemy(monster_data, monster_level):
+def load_enemy(monster_data : Matrix, monster_level : int) -> Dictionary:
     monster_id = randomize_enemy(monster_data)
     monster_index = utils.find_row(monster_data, index=0, element=monster_id)
     
@@ -91,7 +93,7 @@ def load_enemy(monster_data, monster_level):
     enemy_dict = {'name' : name, 'type' : type, 'id': monster_id, 'level': monster_level, 'atk_power': atk_power, 'def_power': def_power, 'hp': hp, 'max_hp' : hp, 'speed' : speed}
     return enemy_dict
 
-def switch_monster(monster_dict, current_monster_index = None):
+def switch_monster(monster_dict : DictList, current_monster_index : int = None) -> Tuple[int,Dictionary,bool]:
     monster_indices = []
     for i in range(len(monster_dict)):
         if i != current_monster_index:
@@ -131,7 +133,7 @@ def switch_monster(monster_dict, current_monster_index = None):
             utils.clear_terminal()
             print_user_monster()
             current_monster_index = int(x) - 1
-            print(f"{monster_dict[int(current_monster_index)]['name']}, Aku memilih kamu")
+            print(f"{monster_dict[current_monster_index]['name']}, Aku memilih kamu")
             break
         else:
             print("Masukkan input yang valid")
@@ -141,8 +143,8 @@ def switch_monster(monster_dict, current_monster_index = None):
     utils.clear_terminal()
     return current_monster_index,monster_dict[current_monster_index],True
 
-def show_stat(monster,status_effect,current_monster_index):
-    def calculate_increase(stat_name, monster, max_value=None):
+def show_stat(monster : Dictionary, status_effect : Matrix, current_monster_index : int):
+    def calculate_increase(stat_name : str, monster : Dictionary, max_value : int = None) -> str:
         if stat_name in status_effect[current_monster_index]:
             increase = int(0.05 / 1.05 * monster[stat_name])
             if increase == 0:
@@ -163,9 +165,9 @@ def show_stat(monster,status_effect,current_monster_index):
 {'Speed':<15}: {monster['speed']}{calculate_increase('speed', monster,50)}
 {'HP':<15}: {f"{monster['hp']}/{monster['max_hp']}"}""")
     
-def show_both_stat(monster1, monster2, status_effect, current_monster_index):
+def show_both_stat(monster1 : Dictionary, monster2 : Dictionary, status_effect : Matrix, current_monster_index : int):
 
-    def calculate_increase(stat_name, monster, max_value=None):
+    def calculate_increase(stat_name : str, monster : Dictionary, max_value : int = None) -> str:
         if stat_name in status_effect[current_monster_index]:
             increase = int(0.05 / 1.05 * monster[stat_name])
             if increase == 0:
@@ -186,7 +188,7 @@ def show_both_stat(monster1, monster2, status_effect, current_monster_index):
 {'Speed':<15}: {f"{monster1['speed']}{calculate_increase('speed', monster1,50)}":32} {'Speed':<15}: {monster2['speed']:<32} 
 {'HP':<15}: {f"{monster1['hp']}/{monster1['max_hp']}":<32} {'HP':<15}: {f"{monster2['hp']}/{monster2['max_hp']}"}""")
 
-def select_action(arena = False):
+def select_action(arena : bool = False) -> str:
     options = ['1','2','3','4']
     if not arena:
         options.append('5')
@@ -214,7 +216,7 @@ def select_action(arena = False):
                 utils.remove_x_line_above(8)
     return x
 
-def select_potion(user_items,monster,current_monster_index,status_effect,monster_data):
+def select_potion(user_items : Matrix, monster : Dictionary, current_monster_index : int, status_effect : Matrix, monster_data : Matrix) -> bool:
     strength_index = utils.find_row(user_items, 1, 'strength')
     speed_index = utils.find_row(user_items, 1, 'speed')
     resilience_index = utils.find_row(user_items, 1, 'resilience')
@@ -327,9 +329,9 @@ def select_potion(user_items,monster,current_monster_index,status_effect,monster
         utils.remove_xth_line_above(1)
         return False
 
-def attack(attacker, defender, monster, enemy, status_effect, current_monster_index) -> int:
+def attack(attacker : Dictionary, defender : Dictionary, monster : Dictionary, enemy : Dictionary, status_effect : Matrix, current_monster_index : int) -> int:
 
-    def calculate_increase(stat) -> str:
+    def calculate_increase(stat : int) -> str:
         if stat < 0:
             return str(stat) + '%'
         elif stat > 0:
@@ -359,7 +361,7 @@ def attack(attacker, defender, monster, enemy, status_effect, current_monster_in
 
     return damage
 
-def execute_turn(first,second, monster, enemy,status_effect, current_monster_index):
+def execute_turn(first : Dictionary, second : Dictionary, monster : Dictionary, enemy : Dictionary, status_effect : Matrix, current_monster_index : int) -> Tuple[int, int]:
     first_damage = attack(first,second, monster, enemy,status_effect, current_monster_index)
     if second['hp'] <= 0:
         print(f"{second['name']} fainted")
@@ -370,23 +372,22 @@ def execute_turn(first,second, monster, enemy,status_effect, current_monster_ind
         return first_damage, second_damage
     return first_damage, second_damage
 
-def run(monster,enemy,escape_attempt):
+def run(monster : Dictionary, enemy : Dictionary, escape_attempt : int) -> bool:
     if monster['speed'] >= enemy['speed']:
         return True
     else:
         escape_odds = ((monster['speed'] * 128) // enemy['speed'] + 30 * escape_attempt) % 256
-        print(escape_odds)
         if rng.rng(1,255) <= escape_odds:
             return True
         else:
             return False
 
-def heal(monster, monster_data):
+def heal(monster : Dictionary, monster_data : Matrix) -> int:
     monster_index = utils.find_row(monster_data, index = 0, element = monster['id'])
     max_hp = int(int(monster_data[monster_index][4]) * (1 + (monster['level'] - 1) * 0.1))
     return int(utils.min(monster['hp'] + 0.25 * max_hp, max_hp))
 
-def potion(status : str,monster,current_monster_index,status_effect,max_value = None):
+def potion(status : str, monster : Dictionary, current_monster_index : int, status_effect : Matrix, max_value : int = None):
     status_effect[current_monster_index].append(status)
     if max_value is not None:
         if monster[status] <= 20:
@@ -396,7 +397,7 @@ def potion(status : str,monster,current_monster_index,status_effect,max_value = 
     else:
         monster[status] = int(1.05 * monster[status])
 
-def battle(current_user,monster_level,user_data, user_id, monster_inventory_data, item_inventory_data, monster_data, arena, reward = None):
+def battle(current_user : Array, monster_level : int, user_data : Matrix, user_id : str, monster_inventory_data : Matrix, item_inventory_data : Matrix, monster_data : Matrix, arena : bool, reward : int = None) -> Tuple[int,int,bool,Matrix,Matrix]:
     total_damage_taken = 0
     total_damage_dealt = 0
     victory = False
@@ -513,7 +514,7 @@ def battle(current_user,monster_level,user_data, user_id, monster_inventory_data
             utils.clear_terminal()
             return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
 
-def update_item_inventory_data(user_id, user_items, item_inventory_data):
+def update_item_inventory_data(user_id : str, user_items : Matrix, item_inventory_data : Matrix) -> Matrix:
     for item in item_inventory_data:
         if item[0] == user_id:
             for user_item in user_items:
@@ -521,7 +522,7 @@ def update_item_inventory_data(user_id, user_items, item_inventory_data):
                     item[2] = str(user_item[2])
     return utils.remove_row(item_inventory_data, 2,'0')
 
-def update_monster_inventory_data(user_id, monster_dict, monster_inventory_data):
+def update_monster_inventory_data(user_id : str, monster_dict : DictList, monster_inventory_data : Matrix) -> Matrix:
     for monster in monster_inventory_data:
         if monster[0] == user_id:
             for user_monster in monster_dict:

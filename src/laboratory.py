@@ -1,7 +1,9 @@
 import time
+from typing import *
 
 from . import utils
 from . import inventory
+from .types import *
 
 def print_laboratory():
     print("""
@@ -13,7 +15,7 @@ def print_laboratory():
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 """)
 
-def laboratory(current_user, user_id, monster_inventory_data, monster_data, user_data):
+def laboratory(current_user : Array, user_id : str, monster_inventory_data : Matrix, monster_data : Matrix, user_data : Matrix) -> Tuple[Matrix, Matrix]:
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)
@@ -34,7 +36,7 @@ def laboratory(current_user, user_id, monster_inventory_data, monster_data, user
             monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data)
             print(f"{'No.':<4}{'Name':<20}{'Type':<20}{'Level':<10}{'HP':<10}")
             for i, monster in enumerate(monster_dict):
-                print(f"{i + 1:<4}{utils.title(monster['name']):<20}{monster['type']:<10}{monster['level']:<10}{monster['hp']}/{monster['max_hp']}")
+                print(f"{i + 1:<4}{utils.title(monster['name']):<20}{monster['type']:<20}{monster['level']:<10}{monster['hp']}/{monster['max_hp']}")
             options = [str(i + 1) for i in range(len(monster_dict))]
             print("Upgrade Price")
             print("Level 1 -> Level 2: 300 OC")
@@ -54,13 +56,14 @@ def laboratory(current_user, user_id, monster_inventory_data, monster_data, user
                     time.sleep(1)
                     utils.remove_x_line_above(2)
 
-def level_up(user_oc, user_index, user_id, user_data, monster_dict, monster_inventory_data,monster_data,index):
+def level_up(user_oc : str, user_index : int, user_id : str, user_data : Matrix, monster_dict : DictList, monster_inventory_data : Matrix, monster_data : Matrix, index : int) -> Tuple[Matrix, Matrix]:
     index = int(index) - 1
     monster = monster_dict[index]
     if int(monster['level']) >= 5:
         print("Maaf, monster yang Anda pilih sudah memiliki level maksimum")
         time.sleep(1)
         utils.clear_terminal()
+        print_laboratory()
     else:
         price = 300 + 200 * (int(monster['level'])-1)
         print(f"{monster['name']} akan diupgrade ke level {monster['level'] + 1}.")
@@ -88,7 +91,7 @@ def level_up(user_oc, user_index, user_id, user_data, monster_dict, monster_inve
         print_laboratory()
     return monster_inventory_data,user_data
 
-def change_level(user_id, monster, monster_inventory_data,monster_data):
+def change_level(user_id : str, monster : Dictionary, monster_inventory_data : Matrix, monster_data : Matrix) -> Matrix:
     max_hp = int((1 + 0.1 *(int(monster['level']) - 1)) * int(monster_data[utils.find_row(monster_data,index = 0, element = monster['id'])][4]))
     for i in monster_inventory_data:
         if i[0] == user_id and i[3] == monster['name']:

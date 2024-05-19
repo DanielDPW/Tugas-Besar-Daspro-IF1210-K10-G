@@ -1,7 +1,9 @@
 import time
+from typing import *
 
 from . import utils
 from . import inventory
+from .types import *
 
 def print_shop():
     print("""
@@ -13,7 +15,7 @@ def print_shop():
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 """)
 
-def load_monster_shop(monster_shop_data,monster_data):
+def load_monster_shop(monster_shop_data : Matrix, monster_data : Matrix) -> DictList:
     monster_shop_dict = []
 
     for row in utils.slice_matrix(monster_shop_data,row_start = 1):
@@ -32,7 +34,7 @@ def load_monster_shop(monster_shop_data,monster_data):
         
     return monster_shop_dict
 
-def load_item_shop(item_shop_data):
+def load_item_shop(item_shop_data : Matrix) -> DictList:
     item_shop_dict = []
 
     for i,row in enumerate(utils.slice_matrix(item_shop_data,row_start = 1)):
@@ -46,7 +48,7 @@ def load_item_shop(item_shop_data):
         
     return item_shop_dict
 
-def shop(current_user,user_id,user_data,item_inventory_data,monster_inventory_data,item_shop_data,monster_shop_data,monster_data):
+def shop(current_user : Array,user_id : str,user_data : Matrix, item_inventory_data : Matrix, monster_inventory_data : Matrix, item_shop_data : Matrix, monster_shop_data : Matrix, monster_data : Matrix) -> Tuple[Matrix, Matrix, Matrix, Matrix, Matrix]:
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)
@@ -73,7 +75,7 @@ def shop(current_user,user_id,user_data,item_inventory_data,monster_inventory_da
                 utils.clear_terminal()
                 return user_data,item_inventory_data,monster_inventory_data,item_shop_data,monster_shop_data
 
-def look(item_shop_dict,monster_shop_dict):
+def look(item_shop_dict : DictList, monster_shop_dict : DictList):
     while True:
         prompt = utils.strip(input("Mau lihat apa? (item/monster): "))
         if prompt == "item":
@@ -83,7 +85,7 @@ def look(item_shop_dict,monster_shop_dict):
             look_monster(monster_shop_dict)
             return
 
-def look_item(item_shop_dict):
+def look_item(item_shop_dict : DictList):
     utils.clear_terminal()
     print_shop()
     print(f"{'ID':<10}{'Type':<20}{'Stock':<10}{'Price':<10}")
@@ -100,14 +102,14 @@ def look_item(item_shop_dict):
             item_name = 'Monster Ball'
         print(f"{item['id']:<10}{item_name:<20}{item['stock']:<10}{item['price']:<10}")
 
-def look_monster(monster_shop_dict):
+def look_monster(monster_shop_dict : DictList):
     utils.clear_terminal()
     print_shop()
     print(f"{'ID':<10}{'Type':<20}{'ATK Power':<10}{'DEF Power':<10}{'HP':<10}{'Speed':<10}{'Stock':<10}{'Price':<10}")
     for monster in monster_shop_dict:
         print(f"{monster['id']:<10} {monster['type']:<20}{monster['atk_power']:<10}{monster['def_power']:<10}{monster['hp']:<10}{monster['speed']:<10}{monster['stock']:<10}{monster['price']:<10}")
 
-def buy(user_id,user_index, user_data,item_inventory_data,monster_inventory_data,item_shop_data, monster_shop_data, item_shop_dict,monster_shop_dict):
+def buy(user_id : str, user_index : int, user_data : Matrix, item_inventory_data : Matrix, monster_inventory_data : Matrix, item_shop_data : Matrix, monster_shop_data : Matrix, item_shop_dict : DictList, monster_shop_dict : DictList) -> Tuple[Matrix, Matrix, Matrix, DictList, Matrix, Matrix, DictList]:
     print(f"Jumlah OWCA Coins mu sekarang adalah {user_data[user_index][4]}")
     while True:
         prompt = utils.strip(input("Mau beli apa? (item/monster): "))
@@ -122,7 +124,7 @@ def buy(user_id,user_index, user_data,item_inventory_data,monster_inventory_data
             utils.remove_x_line_above(2)
     return user_data, item_inventory_data, item_shop_data, item_shop_dict, monster_inventory_data, monster_shop_data, monster_shop_dict
 
-def buy_item(user_id, user_index,user_data,item_inventory_data,item_shop_data, item_shop_dict):
+def buy_item(user_id : str, user_index : int, user_data : Matrix, item_inventory_data : Matrix, item_shop_data : Matrix, item_shop_dict : DictList) -> Tuple[Matrix, Matrix, Matrix, DictList]:
     item_ids = [item_shop_dict[i]['id'] for i in range(len(item_shop_dict))]
     if len(item_ids) != 0:
         while True:
@@ -177,7 +179,7 @@ def buy_item(user_id, user_index,user_data,item_inventory_data,item_shop_data, i
         item_shop_data = update_shop_data(item_shop_data,item_shop_dict,"item")
     return user_data, item_inventory_data, item_shop_data, item_shop_dict
 
-def buy_monster(user_id, user_index,user_data,monster_inventory_data,monster_shop_data, monster_shop_dict):
+def buy_monster(user_id : str, user_index : int, user_data : Matrix, monster_inventory_data : Matrix, monster_shop_data : Matrix, monster_shop_dict : DictList) -> Tuple[Matrix, Matrix, Matrix, DictList]:
     monster_ids = [monster_shop_dict[i]['id'] for i in range(len(monster_shop_dict))]
     if len(monster_ids) != 0:
         while True:
@@ -222,7 +224,7 @@ def buy_monster(user_id, user_index,user_data,monster_inventory_data,monster_sho
             monster_shop_data = update_shop_data(monster_shop_data,monster_shop_dict,"monster")
         return user_data, monster_inventory_data, monster_shop_data, monster_shop_dict
 
-def update_shop_data(shop_data, shop_dict, shop_type):
+def update_shop_data(shop_data : Matrix, shop_dict : DictList, shop_type : str) -> Matrix:
     for i, row in enumerate(shop_dict):
         if shop_type == 'item':
             shop_data[i + 1][0], shop_data[i + 1][1], shop_data[i + 1][2] = row['type'], str(row['stock']), str(row['price'])

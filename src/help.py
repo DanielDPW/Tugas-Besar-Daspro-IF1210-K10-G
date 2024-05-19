@@ -1,6 +1,9 @@
-from . import utils
+from typing import *
 
-def help(current_user):
+from . import utils
+from .types import *
+
+def help(current_user : Array):
     if utils.is_empty(current_user):
         message = f"""
 =================================================================================

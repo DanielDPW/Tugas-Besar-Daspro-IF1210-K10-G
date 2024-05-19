@@ -1,9 +1,11 @@
 import time
+from typing import *
 
 from . import utils
 from . import battle
+from .types import *
 
-def arena(current_user, user_data, user_id, monster_inventory_data, item_inventory_data, monster_data):
+def arena(current_user : Array, user_data : Matrix, user_id : str, monster_inventory_data : Matrix, item_inventory_data : Matrix, monster_data : Matrix) -> Tuple[int,int,int,Matrix,Matrix]:
     total_damage_dealt = 0
     total_damage_taken = 0
     stage_cleared = 0
@@ -21,6 +23,7 @@ def arena(current_user, user_data, user_id, monster_inventory_data, item_invento
         utils.clear_terminal()
         for i in range(5):
             print(f"Stage {i + 1}")
+            time.sleep(2)
             monster_level = i + 1
             damage_dealt, damage_taken, victory,item_inventory_data,monster_inventory_data = battle.battle(current_user, monster_level, user_data, user_id, monster_inventory_data, item_inventory_data, monster_data, True)
             total_damage_dealt = total_damage_dealt + damage_dealt
@@ -29,7 +32,10 @@ def arena(current_user, user_data, user_id, monster_inventory_data, item_invento
                 break
             else:
                 stage_cleared = stage_cleared + 1
-        reward = utils.max(0,50 * (2 ** (stage_cleared - 1)))
+        if stage_cleared == 0:
+            reward = 0
+        else:
+            reward = 50 * (2 ** (stage_cleared - 1))
         user_index = utils.find_row(user_data, index = 0, element = user_id)
         user_data[user_index][4] = str(int(user_data[user_index][4]) + int(reward))
         print(f"Total damage dealt : {total_damage_dealt}")

@@ -1,6 +1,8 @@
 import os
+from typing import *
 
 from . import csv_parser
+from .types import *
 
 def save(user_data, monster_data, monster_shop_data, monster_inventory_data, item_shop_data, item_inventory_data):
     directory = input("Masukkan nama folder penyimpanan: ")
