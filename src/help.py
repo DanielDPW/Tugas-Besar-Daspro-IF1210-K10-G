@@ -39,6 +39,7 @@ Arena      : Bertanding dalam arena
 Heal       : Mengunjungi Healing Fountain
 Shop       : Membeli barang di Superduper Mega Superstore
 Laboratory : Melakukan upgrade kepada monster
+Save       : Menyimpan data ke database
 Exit       : Keluar dari aplikasi
 
 Footnote: 
@@ -58,6 +59,7 @@ Selamat datang, Admin. Berikut adalah hal-hal yang dapat kamu lakukan:
 Logout : Keluar dari akun yang sedang digunakan
 Shop   : Melakukan manajemen pada SHOP sebagai tempat jual beli peralatan Agent
 Monster: Melakukan manajemen pada database monster
+Save   : Menyimpan data ke database
 Exit   : Keluar dari aplikasi
 
 Footnote: 
