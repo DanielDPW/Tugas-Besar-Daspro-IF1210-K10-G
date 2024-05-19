@@ -4,7 +4,7 @@ from typing import *
 from . import csv_parser
 from .types import *
 
-def save(user_data, monster_data, monster_shop_data, monster_inventory_data, item_shop_data, item_inventory_data):
+def save(user_data : Matrix, monster_data : Matrix, monster_shop_data : Matrix, monster_inventory_data : Matrix, item_shop_data : Matrix, item_inventory_data : Matrix):
     directory = input("Masukkan nama folder penyimpanan: ")
 
     if os.path.isdir(directory):

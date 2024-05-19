@@ -80,13 +80,15 @@ def level_up(user_oc : str, user_index : int, user_id : str, user_data : Matrix,
                     break
                 else:
                     print("OC Anda tidak cukup")
-                time.sleep(1)
+                    break
+                
             elif prompt.lower() == 'n':
                 break
             else:
                 print("Masukkan input yang valid")
                 time.sleep(1)
                 utils.remove_x_line_above(2)
+        time.sleep(1)
         utils.clear_terminal()
         print_laboratory()
     return monster_inventory_data,user_data

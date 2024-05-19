@@ -53,6 +53,8 @@ if None not in (user_data, monster_data, monster_shop_data, monster_inventory_da
             monster_inventory_data, user_data = laboratory.laboratory(current_user,user_id, monster_inventory_data, monster_data, user_data)
         elif prompt.lower() == "monster":
             monster_data, monster_inventory_data, monster_shop_data = monster_management.monster_management(current_user,monster_data, monster_inventory_data, monster_shop_data)
+        elif prompt.lower() == "save":
+            save.save(user_data,monster_data,monster_shop_data,monster_inventory_data,item_shop_data,item_inventory_data)
         elif prompt.lower() == "exit":
             exit.exit(user_data, monster_data, monster_shop_data, monster_inventory_data, item_shop_data, item_inventory_data)
             break

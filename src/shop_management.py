@@ -101,6 +101,7 @@ def add_item(item_shop_data : Matrix, item_shop_dict : DictList) -> Tuple[Matrix
                 elif unadded_item_dict[index]['type'] == 'monsterball':
                     item_name = 'Monster Ball'
                 print(f"{item_name} telah berhasil ditambahkan ke dalam shop!")
+                item_shop_data.append([unadded_item_dict[index]['type'],stock,price])
                 time.sleep(1)
                 break
             elif prompt.lower() == 'n':
@@ -111,7 +112,6 @@ def add_item(item_shop_data : Matrix, item_shop_dict : DictList) -> Tuple[Matrix
                 utils.remove_x_line_above(2)
         utils.clear_terminal()
         print_shop_management()
-        item_shop_data.append([unadded_item_dict[index]['type'],stock,price])
         item_shop_dict = shop.load_item_shop(item_shop_data)
         return item_shop_data, item_shop_dict
 
@@ -172,6 +172,7 @@ def add_monster(monster_shop_data : Matrix, monster_data : Matrix, monster_shop_
                 utils.remove_xth_line_above(1)
                 index = utils.find_dict_index(unadded_monster_dict,'id', monster_id)
                 print(f"{unadded_monster_dict[index]['type']} telah berhasil ditambahkan ke dalam shop!")
+                monster_shop_data.append([monster_id,stock,price])
                 time.sleep(1)
                 break
             elif prompt.lower() == 'n':
@@ -182,7 +183,6 @@ def add_monster(monster_shop_data : Matrix, monster_data : Matrix, monster_shop_
                 utils.remove_x_line_above(2)
         utils.clear_terminal()
         print_shop_management()
-        monster_shop_data.append([monster_id,stock,price])
         monster_shop_dict = shop.load_monster_shop(monster_shop_data,monster_data)
         return monster_shop_data, monster_shop_dict
 
@@ -370,7 +370,7 @@ def delete(shop_type : str, shop_data : Matrix ,shop_dict : DictList, monster_da
             prompt = utils.strip(input("Apakah Anda yakin? (Y/N): "))
             if prompt.lower() == 'y':
                 utils.remove_x_line_above(1)
-                idx =  utils.find_dict_index(shop_dict,'id',id)
+                idx = utils.find_dict_index(shop_dict,'id',id)
                 if shop_type == "item":
                     if shop_dict[idx]['type'] == 'strength':
                         item_name = 'Strength Potion'
@@ -383,8 +383,12 @@ def delete(shop_type : str, shop_data : Matrix ,shop_dict : DictList, monster_da
                     elif shop_dict[idx]['type'] == 'monsterball':
                         item_name = 'Monster Ball'
                     print(f"{item_name} telah dihapus dari shop!")
+                    shop_data = utils.remove_row(shop_data,index = 0, element = shop_dict[idx]['type'])
+                    shop_dict = shop.load_item_shop(shop_data)
                 elif shop_type == "monster":
                     print(f"{shop_dict[idx]['type']} telah dihapus dari shop!")
+                    shop_data = utils.remove_row(shop_data,index = 0, element = id)
+                    shop_dict = shop.load_monster_shop(shop_data,monster_data)
                 time.sleep(1)
                 break
             elif prompt.lower() == 'n':
@@ -395,12 +399,6 @@ def delete(shop_type : str, shop_data : Matrix ,shop_dict : DictList, monster_da
                 utils.remove_x_line_above(2)
         utils.clear_terminal()
         print_shop_management()
-        if shop_type == 'item':
-            shop_data = utils.remove_row(shop_data,index = 0, element = shop_dict[idx]['type'])
-            shop_dict = shop.load_item_shop(shop_data)
-        elif shop_type == 'monster':
-            shop_data = utils.remove_row(shop_data,index = 0, element = id)
-            shop_dict = shop.load_monster_shop(shop_data,monster_data)
         return shop_data, shop_dict
 
 
