@@ -85,7 +85,7 @@ def add_type(monster_data):
                 if char not in valid_characters:
                     contains_invalid_char = True
             if contains_invalid_char:
-                print("Name hanya berupa alfabet dan tidak ada spasi")
+                print("Type hanya berupa alfabet dan tidak ada spasi")
                 time.sleep(1)
                 utils.remove_x_line_above(2)
             else:
@@ -136,28 +136,34 @@ def add_monster(monster_data):
 
 def remove_monster(monster_data, monster_inventory_data, monster_shop_data):
     monster_ids = [monster_data[i][0] for i in range(1, len(monster_data))]
-    while True:
-        prompt = utils.strip(input("Masukkan ID monster: "))
-        if prompt not in monster_ids:
-            print("Tolong masukkan id yang valid!")
-            time.sleep(1)
-            utils.remove_x_line_above(2)
-        else:
-            break
-    monster_id = prompt
-    while True:
-        prompt = utils.strip(input("Hapus Monster ke database? (Y/N): "))
-        if prompt.lower() == 'y':
-            utils.remove_xth_line_above(1)
-            print("Monster telah dihapuskan dari database")
-            monster_data = utils.remove_row(monster_data,index = 0,element = monster_id)
-            monster_inventory_data = utils.remove_row(monster_inventory_data,index = 1, element = monster_id)
-            monster_shop_data = utils.remove_row(monster_shop_data, index = 0, element = monster_id)
-            time.sleep(1)
-            break
-        elif prompt.lower() == 'n':
-            break
-    utils.clear_terminal()
-    print_monster_management()
-    return monster_data,monster_inventory_data,monster_shop_data
+    if len(monster_ids) == 0:
+        print("Tidak ada monster di database")
+        time.sleep(1)
+        utils.remove_x_line_above(2)
+        return monster_data,monster_inventory_data,monster_shop_data
+    else:
+        while True:
+            prompt = utils.strip(input("Masukkan ID monster: "))
+            if prompt not in monster_ids:
+                print("Tolong masukkan id yang valid!")
+                time.sleep(1)
+                utils.remove_x_line_above(2)
+            else:
+                break
+        monster_id = prompt
+        while True:
+            prompt = utils.strip(input("Hapus Monster ke database? (Y/N): "))
+            if prompt.lower() == 'y':
+                utils.remove_xth_line_above(1)
+                print("Monster telah dihapuskan dari database")
+                monster_data = utils.remove_row(monster_data,index = 0,element = monster_id)
+                monster_inventory_data = utils.remove_row(monster_inventory_data,index = 1, element = monster_id)
+                monster_shop_data = utils.remove_row(monster_shop_data, index = 0, element = monster_id)
+                time.sleep(1)
+                break
+            elif prompt.lower() == 'n':
+                break
+        utils.clear_terminal()
+        print_monster_management()
+        return monster_data,monster_inventory_data,monster_shop_data
     
