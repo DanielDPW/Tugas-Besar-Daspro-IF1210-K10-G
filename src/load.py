@@ -18,11 +18,12 @@ def print_welcome_to_owca():
 """)
 def load() -> Tuple[Optional[Matrix], Optional[Matrix], Optional[Matrix], Optional[Matrix], Optional[Matrix], Optional[Matrix]]:
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('nama_folder', help='Nama folder tempat data tersimpan')
+    argparser.add_argument('nama_folder', nargs = '?', help='Nama folder tempat data tersimpan')
     args = argparser.parse_args()
     directory = args.nama_folder
-    if directory is None:
+    if not directory:
         print("Tidak ada nama folder yang diberikan")
+        print("Usage : python main.py <nama_folder>")
         return None, None, None, None, None, None
     else:
         if os.path.isdir(directory):
