@@ -7,7 +7,7 @@ from . import utils
 def catch(user_id,enemy,monster_inventory_data):
     odds = rng.rng(1,100)
     if enemy['level'] == 1:
-        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 75):
+        if odds < int((1-(enemy['hp']/enemy['max_hp'])) * 75):
             print("Monster berhasil ditangkap")
             name = inventory.name_monster(user_id,monster_inventory_data)
             monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
@@ -15,7 +15,7 @@ def catch(user_id,enemy,monster_inventory_data):
         else:
             print("Monster lepas dari Monster Ball")
     elif enemy['level'] == 2:
-        if odds < int(1-(enemy['hp']/enemy['max_hp']) *50):
+        if odds < int((1-(enemy['hp']/enemy['max_hp'])) * 50):
             print("Monster berhasil ditangkap")
             name = inventory.name_monster(user_id,monster_inventory_data)
             monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
@@ -23,7 +23,7 @@ def catch(user_id,enemy,monster_inventory_data):
         else:
             print("Monster lepas dari Monster Ball")
     elif enemy['level'] == 3:
-        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 25):
+        if odds < int((1-(enemy['hp']/enemy['max_hp'])) * 25):
             print("Monster berhasil ditangkap")
             name = inventory.name_monster(user_id,monster_inventory_data)
             monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
@@ -31,7 +31,7 @@ def catch(user_id,enemy,monster_inventory_data):
         else:
             print("Monster lepas dari Monster Ball")
     elif enemy['level'] == 4:
-        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 10):
+        if odds < int((1-(enemy['hp']/enemy['max_hp'])) * 10):
             print("Monster berhasil ditangkap")
             name = inventory.name_monster(user_id,monster_inventory_data)
             monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])
@@ -39,7 +39,7 @@ def catch(user_id,enemy,monster_inventory_data):
         else:
             print("Monster lepas dari Monster Ball")
     elif enemy['level'] == 5:
-        if odds < int(1-(enemy['hp']/enemy['max_hp']) * 5):
+        if odds < int((1-(enemy['hp']/enemy['max_hp'])) * 5):
             print("Monster berhasil ditangkap")
             name = inventory.name_monster(user_id,monster_inventory_data)
             monster_inventory_data.append([user_id, enemy['id'], enemy['level'], name, enemy['hp']])

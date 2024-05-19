@@ -24,6 +24,7 @@ def shop_management(current_user,item_shop_data, monster_shop_data, monster_data
         utils.remove_x_line_above(2)
         return item_shop_data, monster_shop_data
     else:
+        utils.clear_terminal()
         print_shop_management()
         item_shop_dict = shop.load_item_shop(item_shop_data)
         monster_shop_dict = shop.load_monster_shop(monster_shop_data,monster_data)
@@ -314,7 +315,7 @@ def remove(item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict)
             item_shop_data, item_shop_dict = delete('item',item_shop_data,item_shop_dict)
             break
         elif prompt == "monster":
-            monster_shop_data, monster_shop_dict = delete('mosnter',monster_shop_data,monster_shop_dict)
+            monster_shop_data, monster_shop_dict = delete('monster',monster_shop_data,monster_shop_dict)
             break
         else:
             print("Masukkan input yang valid")

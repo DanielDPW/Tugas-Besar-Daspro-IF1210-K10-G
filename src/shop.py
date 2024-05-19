@@ -58,6 +58,7 @@ def shop(current_user,user_id,user_data,item_inventory_data,monster_inventory_da
         utils.remove_x_line_above(2)
         return user_data,item_inventory_data,monster_inventory_data,item_shop_data,monster_shop_data
     else:
+        utils.clear_terminal()
         print_shop()
         user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
         item_shop_dict = load_item_shop(item_shop_data)

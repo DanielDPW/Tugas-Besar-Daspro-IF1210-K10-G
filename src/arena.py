@@ -2,8 +2,6 @@ import time
 
 from . import utils
 from . import battle
-from . import rng
-from . import inventory
 
 def arena(current_user, user_data, user_id, monster_inventory_data, item_inventory_data, monster_data):
     total_damage_dealt = 0
@@ -20,6 +18,7 @@ def arena(current_user, user_data, user_id, monster_inventory_data, item_invento
         utils.remove_x_line_above(2)
         return total_damage_dealt,total_damage_taken,stage_cleared,item_inventory_data,monster_inventory_data
     else:
+        utils.clear_terminal()
         for i in range(5):
             print(f"Stage {i + 1}")
             monster_level = i + 1

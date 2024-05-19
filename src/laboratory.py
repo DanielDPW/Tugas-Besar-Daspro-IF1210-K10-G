@@ -25,6 +25,7 @@ def laboratory(current_user, user_id, monster_inventory_data, monster_data, user
         utils.remove_x_line_above(2)
         return monster_inventory_data, user_data
     else:
+        utils.clear_terminal()
         print_laboratory()
         while True:
             user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
