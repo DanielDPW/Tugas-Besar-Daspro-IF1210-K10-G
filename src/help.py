@@ -33,6 +33,7 @@ Logout     : Keluar dari akun yang sedang digunakan
 Inventory  : Melihat owca-dex yang dimiliki oleh agen
 Battle     : Memulai pertarungan dengan monster
 Arena      : Bertanding dalam arena
+Heal       : Mengunjungi Healing Fountain
 Shop       : Membeli barang di Superduper Mega Superstore
 Laboratory : Melakukan upgrade kepada monster
 Exit       : Keluar dari aplikasi

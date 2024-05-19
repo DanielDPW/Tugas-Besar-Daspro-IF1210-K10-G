@@ -411,6 +411,7 @@ def battle(current_user,monster_level,user_data, user_id, monster_inventory_data
         utils.remove_x_line_above(2)
         return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
     else:
+        utils.clear_terminal()
         monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data, battle = True)
         enemy = load_enemy(monster_data,monster_level)
         user_items = inventory.get_user_inventory(user_id,item_inventory_data)

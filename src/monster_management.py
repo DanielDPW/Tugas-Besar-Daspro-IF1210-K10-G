@@ -25,6 +25,7 @@ def monster_management(current_user, monster_data, monster_inventory_data, monst
         utils.remove_x_line_above(2)
         return monster_data, monster_inventory_data, monster_shop_data
     else:
+        utils.clear_terminal()
         print_monster_management()
         while True:
             print("1. Tampilkan semua Monster")
@@ -39,9 +40,13 @@ def monster_management(current_user, monster_data, monster_inventory_data, monst
             elif prompt == '3':
                 monster_data, monster_inventory_data, monster_shop_data = remove_monster(monster_data, monster_inventory_data, monster_shop_data)
             elif prompt == '4':
+                time.sleep(1)
+                utils.clear_terminal()
                 return monster_data, monster_inventory_data, monster_shop_data
             else:
                 print("Masukkan input yang valid")
+                time.sleep(1)
+                utils.remove_x_line_above(6)
 
 def generate_monster_id(monster_data):
     existing_id = utils.ascending_sort([monster_data[i][0] for i in range(1, len(monster_data)) if not utils.is_space(monster_data[i][0])])
@@ -59,6 +64,7 @@ def show_monster(monster_data):
         print(f"{row[0]:<10} {row[1]:<20} {row[2]:<10} {row[3]:<10} {row[4]:<10} {row[5]:<10}")
 
 def add_type(monster_data):
+    valid_characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     while True:
         prompt = utils.strip(input("Masukkan Type: "))
         if len(prompt) == 0 or utils.is_space(prompt):
@@ -74,8 +80,16 @@ def add_type(monster_data):
             time.sleep(1)
             utils.remove_x_line_above(2)
         else:
-            break
-    return prompt
+            contains_invalid_char = False
+            for char in prompt:
+                if char not in valid_characters:
+                    contains_invalid_char = True
+            if contains_invalid_char:
+                print("Name hanya berupa alfabet dan tidak ada spasi")
+                time.sleep(1)
+                utils.remove_x_line_above(2)
+            else:
+                return prompt
 
 def add_stat(stat : str, idx : int, min : Optional[int] = None, max : Optional[int] = None):
     while True:
@@ -98,9 +112,9 @@ def add_stat(stat : str, idx : int, min : Optional[int] = None, max : Optional[i
 
 def add_monster(monster_data):
     type = add_type(monster_data)
-    atk_power = add_stat("ATK Power",idx = 2, min = 0, max = 9999999999)
+    atk_power = add_stat("ATK Power",idx = 2, min = 1, max = 9999999999)
     def_power = add_stat("DEF Power",idx = 3, min = 0, max = 50)
-    hp = add_stat("HP",idx = 4, min = 0, max = 9999999999)
+    hp = add_stat("HP",idx = 4, min = 1, max = 9999999999)
     speed = add_stat("Speed",idx = 5, min = 0, max = 50)
     while True:
         prompt = utils.strip(input("Tambahkan Monster ke database? (Y/N): "))

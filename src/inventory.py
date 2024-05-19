@@ -88,7 +88,7 @@ def name_monster(user_id, monster_inventory_data):
                 if char not in valid_characters:
                     contains_invalid_char = True
             if contains_invalid_char:
-                print("Name hanya berupa alfabet")
+                print("Name hanya berupa alfabet dan tidak ada spasi")
                 time.sleep(1)
                 utils.remove_x_line_above(2)
             else:
@@ -106,6 +106,7 @@ def inventory(current_user, user_id,user_data,item_inventory_data, monster_inven
         utils.remove_x_line_above(2)
         return
     else:
+        utils.clear_terminal()
         print_inventory()
         while True:
             prompt = utils.strip(input("Mau lihat apa? (item/monster/keluar): "))
@@ -189,9 +190,9 @@ def show_monsters(user_id, user_data, monster_inventory_data, monster_data):
         user_oc = user_data[user_index][4]
         print(f"Jumlah OWCA Coins Anda sekarang: {user_oc}")
         monster_dict = load_user_monsters(user_id,monster_inventory_data,monster_data)
-        print(f"{'ID':<10}{'Name':<20}{'Type':<20}{'Level':<10}{'HP':<10}")
+        print(f"{'No.':<10}{'Name':<20}{'Type':<20}{'Level':<10}{'HP':<10}")
         for i, monster in enumerate(monster_dict):
-            print(f"{i + 1}. {utils.title(monster['name'])} (Type: {monster['type']} Level: {monster['level']} HP: {monster['hp']}/{monster['max_hp']}")
+            print(f"{i + 1:<10} {utils.title(monster['name']):<20}{monster['type']:<20}{monster['level']:<10}{monster['hp']}/{monster['max_hp']}")
         options = [str(i + 1) for i in range(len(monster_dict))]
         while True:
             prompt = utils.strip(input("Ketikkan id yang mau ditampilkan atau x untuk keluar:"))

@@ -26,6 +26,7 @@ def healingfountain(current_user, user_id, user_data, monster_inventory_data, mo
         utils.remove_x_line_above(2)
         return monster_inventory_data, user_data
     else:
+        utils.clear_terminal()
         print_healing_fountain()
         user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
         print(f"Jumlah OWCA Coins Anda sekarang adalah {user_data[user_index][4]}")
@@ -41,7 +42,7 @@ def healingfountain(current_user, user_id, user_data, monster_inventory_data, mo
         else:
             price = int(count * 25)
             while True:
-                prompt = utils.strip(input(f"Apakah Anda mau membayar {user_data[user_index][4]} untuk menyembuhkan semua monster Anda (y/n): "))
+                prompt = utils.strip(input(f"Apakah Anda mau membayar {price} untuk menyembuhkan semua monster Anda (y/n): "))
                 if prompt.lower() == 'y':
                     if int(user_data[user_index][4]) >= price:
                         user_data[user_index][4] = str(int(user_data[user_index][4]) - price)
