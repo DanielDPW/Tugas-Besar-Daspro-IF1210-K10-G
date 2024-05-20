@@ -15,6 +15,8 @@ def print_shop_management():
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 """)
 def shop_management(current_user : Array, item_shop_data : Matrix, monster_shop_data : Matrix, monster_data : Matrix) -> Tuple[Matrix, Matrix]:
+    
+    # Cek apakah user sudah login atau merupakan Admin
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)
@@ -28,8 +30,11 @@ def shop_management(current_user : Array, item_shop_data : Matrix, monster_shop_
     else:
         utils.clear_terminal()
         print_shop_management()
+
+        # Load dictionary list
         item_shop_dict = shop.load_item_shop(item_shop_data)
         monster_shop_dict = shop.load_monster_shop(monster_shop_data,monster_data)
+
         while True:
             prompt = utils.strip(input("Pilih aksi (lihat/tambah/ubah/hapus/keluar): "))
             if prompt == 'lihat':
@@ -64,7 +69,9 @@ def add(item_shop_data : Matrix, monster_shop_data : Matrix, monster_data : Matr
     return item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict
 
 def add_item(item_shop_data : Matrix, item_shop_dict : DictList) -> Tuple[Matrix, DictList]:
-    unadded_item_dict = load_unadded_item(item_shop_dict)
+    unadded_item_dict = load_unadded_item(item_shop_dict) # Load item yang belum ada di shop
+
+    # Jika panjang DictList tersebut 0, maka fungsi diterminasi
     if len(unadded_item_dict) == 0:
         print("Semua item sudah ada di shop")
         time.sleep(1)
@@ -154,7 +161,9 @@ def add_input_id_stock_price(ids : Array) -> Tuple[str,str,str]:
     return id, stock, price
 
 def add_monster(monster_shop_data : Matrix, monster_data : Matrix, monster_shop_dict : DictList) -> Tuple[Matrix, DictList]:
-    unadded_monster_dict = load_unadded_monster(monster_shop_dict,monster_data)
+    unadded_monster_dict = load_unadded_monster(monster_shop_dict,monster_data) # Load monster yang tidak ada di shop
+
+    # Jika panjang DictList = 0, maka fungsi diterminasi
     if len(unadded_monster_dict) == 0:
         print("Semua monster sudah ada di shop")
         time.sleep(1)
@@ -269,7 +278,9 @@ def edit_input_id_stock_price(ids : Array) -> Tuple[str, str, str]:
     return id, stock, price
 
 def edit(shop_type : str, shop_data : Matrix, shop_dict : DictList) -> Tuple[Matrix, DictList]:
-    ids = [shop_dict[i]['id'] for i in range(len(shop_dict))]
+    ids = [shop_dict[i]['id'] for i in range(len(shop_dict))] # Array id item/monster
+
+    # Jika panjangnya 0, maka fungsi diterminasi
     if len(ids) == 0:
         print(f"Tidak ada {shop_type} di shop")
         time.sleep(1)
@@ -281,6 +292,8 @@ def edit(shop_type : str, shop_data : Matrix, shop_dict : DictList) -> Tuple[Mat
         shop.look_monster(shop_dict)
     while True:
         id,stock,price = edit_input_id_stock_price(ids)
+
+        # Jika tidak terjadi perubahan, maka akan disuruh edit ulang
         if utils.is_empty(stock) and utils.is_empty(price):
             print("Tidak ada perubahan")
             time.sleep(1)
@@ -325,6 +338,7 @@ def edit(shop_type : str, shop_data : Matrix, shop_dict : DictList) -> Tuple[Mat
             print("Masukkan input yang valid")
             time.sleep(1)
             utils.remove_x_line_above(2)
+
     utils.clear_terminal()
     print_shop_management()
     shop_data = shop.update_shop_data(shop_data, shop_dict, shop_type)
@@ -346,6 +360,8 @@ def remove(item_shop_data : Matrix, item_shop_dict : DictList, monster_shop_data
     return item_shop_data, item_shop_dict, monster_shop_data, monster_shop_dict
 
 def delete(shop_type : str, shop_data : Matrix ,shop_dict : DictList, monster_data : Matrix) -> Tuple[Matrix, DictList]:
+    
+    # Jika panjangnya 0, maka fungsi diterminasi
     if len(shop_dict) == 0:
         print(f"Tidak ada {shop_type} yang bisa dihapus")
         time.sleep(1)

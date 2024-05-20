@@ -15,6 +15,8 @@ def print_monster_management():
 """)
     
 def monster_management(current_user : Array, monster_data : Matrix, monster_inventory_data : Matrix, monster_shop_data : Matrix) -> Tuple[Matrix, Matrix, Matrix]:
+    
+    # Cek apakah user sudah login atau merupakan Admin
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)
@@ -28,6 +30,8 @@ def monster_management(current_user : Array, monster_data : Matrix, monster_inve
     else:
         utils.clear_terminal()
         print_monster_management()
+        
+        # Pilihan opsi
         while True:
             print("1. Tampilkan semua Monster")
             print("2. Tambah Monster baru")
@@ -50,7 +54,11 @@ def monster_management(current_user : Array, monster_data : Matrix, monster_inve
                 utils.remove_x_line_above(6)
 
 def generate_monster_id(monster_data : Matrix) -> str:
+
+    # Mengurutkan setiap monster ID
     existing_id = utils.ascending_sort([monster_data[i][0] for i in range(1, len(monster_data)) if not utils.is_space(monster_data[i][0])])
+    
+    # Mencari nilai terkecil yang belum terpakai
     num = 1
     while str(num) in existing_id:
         num = num + 1
@@ -66,6 +74,8 @@ def show_monster(monster_data : Matrix):
 
 def add_type(monster_data : Matrix) -> str:
     valid_characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    # Masukkan type yang benar
     while True:
         prompt = utils.strip(input("Masukkan Type: "))
         if len(prompt) == 0 or utils.is_space(prompt):
@@ -93,6 +103,8 @@ def add_type(monster_data : Matrix) -> str:
                 return prompt
 
 def add_stat(stat : str, min : Optional[int] = None, max : Optional[int] = None) -> str:
+
+    # Masukkan stat yang benar
     while True:
         prompt = utils.strip(input(f"Masukkan {stat}{f' {min} - {max}' if min is not None and max is not None else ''}: "))
         if len(prompt) == 0 or utils.is_space(prompt):
@@ -112,6 +124,8 @@ def add_stat(stat : str, min : Optional[int] = None, max : Optional[int] = None)
     return prompt
 
 def add_monster(monster_data : Matrix) -> Matrix:
+
+    # Inisialisasi stat monster
     type = add_type(monster_data)
     atk_power = add_stat("ATK Power", min = 1, max = 9999999999)
     def_power = add_stat("DEF Power", min = 0, max = 50)
@@ -136,7 +150,10 @@ def add_monster(monster_data : Matrix) -> Matrix:
     return monster_data
 
 def remove_monster(monster_data : Matrix, monster_inventory_data : Matrix, monster_shop_data : Matrix) -> Tuple[Matrix, Matrix, Matrix]:
+    # Mencari monster yang ada di dabase
     monster_ids = [monster_data[i][0] for i in range(1, len(monster_data))]
+
+    # Jika kosong, maka fungsi diterminasi
     if len(monster_ids) == 0:
         print("Tidak ada monster di database")
         time.sleep(1)

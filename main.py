@@ -37,7 +37,7 @@ if None not in (user_data, monster_data, monster_shop_data, monster_inventory_da
         elif prompt.lower() == "battle":
             total_damage_dealt, total_damage_taken, victory,item_inventory_data,monster_inventory_data = battle.battle(current_user,battle.randomize_enemy_level(),user_data, user_id, monster_inventory_data, item_inventory_data, monster_data, arena = False, reward = rng.rng(15,50))
         elif prompt.lower() == "arena":
-            total_damage_dealt,total_damage_taken,stage_cleared,item_inventory_data,monster_inventory_data = arena.arena(current_user,user_data, user_id, monster_inventory_data, item_inventory_data, monster_data)
+            item_inventory_data,monster_inventory_data = arena.arena(current_user,user_data, user_id, monster_inventory_data, item_inventory_data, monster_data)
         elif prompt.lower() == "heal":
             monster_inventory_data, user_data = healingfountain.healingfountain(current_user,user_id,user_data,monster_inventory_data, monster_data)
         elif prompt.lower() == "shop":

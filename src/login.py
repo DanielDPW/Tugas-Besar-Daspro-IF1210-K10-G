@@ -5,6 +5,8 @@ from . import utils
 from .types import *
 
 def login(user_data : Matrix, current_user : Array) -> Tuple[Array, Optional[str]]:
+
+    # Cek apakah tidak ada user yang sendang menggunakan program
     if not utils.is_empty(current_user):
         print(f"Anda telah login dengan username {current_user[1]}, silahkan lakukan 'LOGOUT' sebelum melakukan register.")
         time.sleep(1)
@@ -12,6 +14,7 @@ def login(user_data : Matrix, current_user : Array) -> Tuple[Array, Optional[str
         return current_user, None
     else:
         while True:
+            # Validasi username
             username = utils.strip(input("Masukkan username: "))
             if utils.is_space(username):
                 print("Username tidak boleh kosong")
@@ -20,6 +23,7 @@ def login(user_data : Matrix, current_user : Array) -> Tuple[Array, Optional[str
             else:
                 break
         while True:
+            # Validasi password
             password = utils.strip(input("Masukkan password: "))
             if utils.is_space(password):
                 print("Password tidak boleh kosong")
@@ -27,6 +31,7 @@ def login(user_data : Matrix, current_user : Array) -> Tuple[Array, Optional[str
                 utils.remove_x_line_above(2)
             else:
                 break
+        # Cari user
         user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 1, username) + 1
         user_id = user_data[user_index][0]
 
@@ -49,6 +54,8 @@ def login(user_data : Matrix, current_user : Array) -> Tuple[Array, Optional[str
         
 
 def logout(current_user : Array) -> Tuple[Array, str]:
+
+    # Jika kosong, maka tidak bisa logout
     if utils.is_empty(current_user):
         print("Logout gagal!")
         print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")

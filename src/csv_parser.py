@@ -5,8 +5,11 @@ from .types import *
 
 def parse_csv(csv : str) -> Matrix:
     with open(csv, 'r') as file:
+
+        # Inisialisasi headers
         headers = []
         found_headers = False
+        
         for line in file:
             if not found_headers:
                 headers = utils.split(utils.strip(line), ';')
