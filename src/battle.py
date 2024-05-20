@@ -71,7 +71,7 @@ def randomize_enemy_level() -> int:
     elif odds <= 15:
         return 1    
     
-def randomize_enemy(monster_data : int) -> int:
+def randomize_enemy(monster_data : Matrix) -> int:
     monster_ids = []
 
     # Memasukkan tiap ID dalam array
