@@ -120,8 +120,8 @@ Tugas ini diberikan kepada mahasiswa TPB STEI 2023 pada Semester 2 tahun ajaran 
 <!-- AUTHOR -->
 ### Authors
 
-| NIM | Name | Contribution |
-| :---: | :---: | :---: |
+| NIM | Name 
+| :---: | :---: 
 | 19623099 | Daniel Pedrosa Wu | 
 | 19623039 | Devon Wiraditya Tanumihardja | 
 | 19623049 | Darryl Rayhananta Adenan | 
