@@ -16,6 +16,8 @@ def print_laboratory():
 """)
 
 def laboratory(current_user : Array, user_id : str, monster_inventory_data : Matrix, monster_data : Matrix, user_data : Matrix) -> Tuple[Matrix, Matrix]:
+    
+    # Cek apakah user sudah login atau merupakan agent
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)
@@ -29,11 +31,13 @@ def laboratory(current_user : Array, user_id : str, monster_inventory_data : Mat
     else:
         utils.clear_terminal()
         print_laboratory()
+
         while True:
-            user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
-            user_oc = user_data[user_index][4]
+            user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1 # Cari index user
+            user_oc = user_data[user_index][4] # Cari jumlah OC user
             print(f"Jumlah OWCA Coins Anda sekarang: {user_oc}")
-            monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data)
+            monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data) # Load dictionary list
+
             print(f"{'No.':<4}{'Name':<20}{'Type':<20}{'Level':<10}{'HP':<10}")
             for i, monster in enumerate(monster_dict):
                 print(f"{i + 1:<4}{utils.title(monster['name']):<20}{monster['type']:<20}{monster['level']:<10}{monster['hp']}/{monster['max_hp']}")
@@ -59,6 +63,8 @@ def laboratory(current_user : Array, user_id : str, monster_inventory_data : Mat
 def level_up(user_oc : str, user_index : int, user_id : str, user_data : Matrix, monster_dict : DictList, monster_inventory_data : Matrix, monster_data : Matrix, index : int) -> Tuple[Matrix, Matrix]:
     index = int(index) - 1
     monster = monster_dict[index]
+    
+    # Cek level monster
     if int(monster['level']) >= 5:
         print("Maaf, monster yang Anda pilih sudah memiliki level maksimum")
         time.sleep(1)
@@ -72,7 +78,7 @@ def level_up(user_oc : str, user_index : int, user_id : str, user_data : Matrix,
             prompt = utils.strip(input("Lanjutkan upgrade? (Y/N) "))
             if prompt.lower() == 'y':
                 utils.remove_xth_line_above(1)
-                if int(user_oc) >= price:
+                if int(user_oc) >= price: # Cek OC user
                     user_data[user_index][4] = str(int(user_data[user_index][4]) - price)
                     monster['level'] = str(int(monster['level']) + 1)
                     monster_inventory_data = change_level(user_id,monster,monster_inventory_data,monster_data)

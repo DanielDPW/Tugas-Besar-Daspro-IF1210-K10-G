@@ -23,6 +23,8 @@ def generate_user_id(user_data : Matrix) -> str:
     return str(num)
 
 def register(user_data : Matrix, current_user : Matrix, monster_data : Matrix, monster_inventory_data : Matrix) -> Tuple[Matrix, Matrix]:
+    
+    # Cek apakah tidak ada user yang sendang menggunakan program
     if not utils.is_empty(current_user):
         print(f"Anda telah login dengan username {current_user[1]}, silahkan lakukan 'LOGOUT' sebelum melakukan register.")
         time.sleep(1)
@@ -44,7 +46,7 @@ def register(user_data : Matrix, current_user : Matrix, monster_data : Matrix, m
                 utils.remove_x_line_above(2)
             else:
                 break
-
+        # Jika sudah ada username yang terpakai
         if utils.is_in_column(utils.slice_matrix(user_data, row_start = 1), 1, username):
             print(f"Username {username} telah terpakai, silahkan gunakan username lain!")
             time.sleep(1)
@@ -54,6 +56,7 @@ def register(user_data : Matrix, current_user : Matrix, monster_data : Matrix, m
             time.sleep(1)
             utils.clear_terminal()
         else:
+            # Jika tidak, maka digenerate hal yang diperlukan
             id = generate_user_id(user_data)
             new_user_data = [id, username, password, 'agent', '0']
             user_data.append(new_user_data)
@@ -66,12 +69,15 @@ def register(user_data : Matrix, current_user : Matrix, monster_data : Matrix, m
 
 def choose_starter(user_id : str, monster_data : Matrix, monster_inventory_data : Matrix):
     monster_list = utils.slice_matrix(monster_data,row_start = 1)
+
+    # Jika tidak ada monster di database, maka program diterminasi
     if len(monster_list) == 0:
         print("Tidak ada monster di database")
         time.sleep(1)
         utils.remove_xth_line_above(1)
         return monster_inventory_data
     else:
+        # Ambil maksimal 3 monster untuk pilihan pertama
         starter_range = utils.min(len(monster_list), 3)
         starter_ids = []
         print(f"{'ID':<10}{'Type':<20}{'ATK Power':<10}{'DEF Power':<10}{'HP':<10}{'Speed':<10}")

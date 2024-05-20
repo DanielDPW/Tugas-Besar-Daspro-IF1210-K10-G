@@ -16,8 +16,9 @@ def print_shop():
 """)
 
 def load_monster_shop(monster_shop_data : Matrix, monster_data : Matrix) -> DictList:
-    monster_shop_dict = []
+    monster_shop_dict = [] # Deklarasi list
 
+    # Memasukkan data ke list of dictionary
     for row in utils.slice_matrix(monster_shop_data,row_start = 1):
         monster_index = utils.find_row(monster_data, index = 0, element = row[0])
         monster_id = row[0]
@@ -35,8 +36,9 @@ def load_monster_shop(monster_shop_data : Matrix, monster_data : Matrix) -> Dict
     return monster_shop_dict
 
 def load_item_shop(item_shop_data : Matrix) -> DictList:
-    item_shop_dict = []
+    item_shop_dict = [] # Deklarasi list
 
+    # Memasukkan data ke list of dictionary
     for i,row in enumerate(utils.slice_matrix(item_shop_data,row_start = 1)):
         item_id = str(i + 1)
         item_type = row[0]
@@ -49,6 +51,8 @@ def load_item_shop(item_shop_data : Matrix) -> DictList:
     return item_shop_dict
 
 def shop(current_user : Array,user_id : str,user_data : Matrix, item_inventory_data : Matrix, monster_inventory_data : Matrix, item_shop_data : Matrix, monster_shop_data : Matrix, monster_data : Matrix) -> Tuple[Matrix, Matrix, Matrix, Matrix, Matrix]:
+    
+    # Cek apakah user sudah login atau merupakan agent
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)
@@ -62,7 +66,9 @@ def shop(current_user : Array,user_id : str,user_data : Matrix, item_inventory_d
     else:
         utils.clear_terminal()
         print_shop()
-        user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
+        user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1 # Cari index user
+
+        # Inisialisasi list of dictionary
         item_shop_dict = load_item_shop(item_shop_data)
         monster_shop_dict = load_monster_shop(monster_shop_data,monster_data)
         while True:
@@ -84,7 +90,9 @@ def look(item_shop_dict : DictList, monster_shop_dict : DictList):
         elif prompt == "monster":
             look_monster(monster_shop_dict)
             return
-
+        else:
+            print("Masukkan input yang valid")
+            utils.remove_x_line_above(2)
 def look_item(item_shop_dict : DictList):
     utils.clear_terminal()
     print_shop()
@@ -110,7 +118,7 @@ def look_monster(monster_shop_dict : DictList):
         print(f"{monster['id']:<10} {monster['type']:<20}{monster['atk_power']:<10}{monster['def_power']:<10}{monster['hp']:<10}{monster['speed']:<10}{monster['stock']:<10}{monster['price']:<10}")
 
 def buy(user_id : str, user_index : int, user_data : Matrix, item_inventory_data : Matrix, monster_inventory_data : Matrix, item_shop_data : Matrix, monster_shop_data : Matrix, item_shop_dict : DictList, monster_shop_dict : DictList) -> Tuple[Matrix, Matrix, Matrix, DictList, Matrix, Matrix, DictList]:
-    print(f"Jumlah OWCA Coins mu sekarang adalah {user_data[user_index][4]}")
+    print(f"Jumlah OWCA Coins mu sekarang adalah {user_data[user_index][4]}") # Print OC user
     while True:
         prompt = utils.strip(input("Mau beli apa? (item/monster): "))
         if prompt == "item":
@@ -126,7 +134,14 @@ def buy(user_id : str, user_index : int, user_data : Matrix, item_inventory_data
 
 def buy_item(user_id : str, user_index : int, user_data : Matrix, item_inventory_data : Matrix, item_shop_data : Matrix, item_shop_dict : DictList) -> Tuple[Matrix, Matrix, Matrix, DictList]:
     item_ids = [item_shop_dict[i]['id'] for i in range(len(item_shop_dict))]
-    if len(item_ids) != 0:
+
+    # Jika panjangnya = nol, maka terminasi
+    if len(item_ids) == 0:
+        print("Tidak ada item di database")
+        time.sleep(1)
+        utils.remove_x_line_above(4)
+        return user_data, item_inventory_data, item_shop_data, item_shop_dict
+    else:
         while True:
             prompt = utils.strip(input("Masukkan ID: "))
             if prompt in item_ids:
@@ -139,7 +154,7 @@ def buy_item(user_id : str, user_index : int, user_data : Matrix, item_inventory
         item_index = utils.find_dict_index(item_shop_dict, key = 'id' , value = item_id)
         while True:
             prompt = utils.strip(input("Masukkan jumlah item: "))
-            if utils.is_digit(prompt) and int(prompt) > 0:
+            if utils.is_int(prompt) and int(prompt) > 0:
                 if int(prompt) > item_shop_dict[item_index]['stock']:
                     print("Stock tidak cukup")
                     time.sleep(1)
@@ -148,10 +163,15 @@ def buy_item(user_id : str, user_index : int, user_data : Matrix, item_inventory
                 elif int(prompt) * item_shop_dict[item_index]['price'] > int(user_data[user_index][4]):
                     print("OC Anda tidak cukup")
                     time.sleep(1)
-                    utils.remove_x_line_above(2)
+                    utils.clear_terminal()
+                    print_shop()
                     return user_data, item_inventory_data, item_shop_data, item_shop_dict
                 else:
                     break
+            else:
+                print("Masukkan input yang valid")
+                time.sleep(1)
+                utils.remove_x_line_above(2)
         amt_bought = int(prompt)
         total_price = amt_bought * item_shop_dict[item_index]['price']
         while True:
@@ -181,7 +201,14 @@ def buy_item(user_id : str, user_index : int, user_data : Matrix, item_inventory
 
 def buy_monster(user_id : str, user_index : int, user_data : Matrix, monster_inventory_data : Matrix, monster_shop_data : Matrix, monster_shop_dict : DictList) -> Tuple[Matrix, Matrix, Matrix, DictList]:
     monster_ids = [monster_shop_dict[i]['id'] for i in range(len(monster_shop_dict))]
-    if len(monster_ids) != 0:
+    
+    # Jika panjangnya = nol, maka terminasi
+    if len(monster_ids) == 0:
+        print("Tidak ada monster di database")
+        time.sleep(1)
+        utils.remove_x_line_above(4)
+        return user_data, monster_inventory_data, monster_shop_data, monster_shop_dict
+    else:
         while True:
             prompt = utils.strip(input("Masukkan ID: "))
             if prompt in monster_ids:
@@ -196,11 +223,13 @@ def buy_monster(user_id : str, user_index : int, user_data : Matrix, monster_inv
             print("Stock tidak cukup")
             time.sleep(1)
             utils.clear_terminal()
+            print_shop()
             return user_data, monster_inventory_data, monster_shop_data, monster_shop_dict
         elif int(user_data[user_index][4]) < monster_shop_dict[monster_index]['price']:
             print("OC Anda tidak cukup")
             time.sleep(1)
             utils.clear_terminal()
+            print_shop()
             return user_data, monster_inventory_data, monster_shop_data, monster_shop_dict
         else:
             while True:

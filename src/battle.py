@@ -74,39 +74,52 @@ def randomize_enemy_level() -> int:
 def randomize_enemy(monster_data : int) -> int:
     monster_ids = []
 
+    # Memasukkan tiap ID dalam array
     for i in range(1, len(monster_data)):
         monster_ids.append(monster_data [i][0])
+
+    # Secara acak memilih dari dalam ID tersebut
     monster_id = monster_ids[rng.rng(0, len(monster_ids) - 1)]
 
     return monster_id
 
 def load_enemy(monster_data : Matrix, monster_level : int) -> Dictionary:
+    # Pilih ID secara acak dan cari ID itu terdapat pada index mana
     monster_id = randomize_enemy(monster_data)
     monster_index = utils.find_row(monster_data, index=0, element=monster_id)
     
+    # Deklarasi value yang akan ditaruh dalam dictionary
     type = monster_data[monster_index][1]
     name = 'Enemy' + type
     atk_power = int(int(monster_data[monster_index][2]) * (1 + (monster_level - 1) * 0.1))
     def_power = utils.min(int(int(monster_data[monster_index][3]) * (1 + (monster_level - 1) * 0.1)), 50)
     hp = int(int(monster_data[monster_index][4]) * (1 + (monster_level - 1) * 0.1))
     speed = utils.min(int(int(monster_data[monster_index][5]) * (1 + (monster_level - 1) * 0.1)), 50)
+
+    # Value masuk ke dalam dictionary
     enemy_dict = {'name' : name, 'type' : type, 'id': monster_id, 'level': monster_level, 'atk_power': atk_power, 'def_power': def_power, 'hp': hp, 'max_hp' : hp, 'speed' : speed}
+    
     return enemy_dict
 
 def switch_monster(monster_dict : DictList, current_monster_index : int = None) -> Tuple[int,Dictionary,bool]:
+
+    # Cari index yang valid
     monster_indices = []
     for i in range(len(monster_dict)):
         if i != current_monster_index:
             monster_indices.append(str(i + 1))
+    
+    # Print monster user
     print("Pilih monstermu")
     for i, monster in enumerate(monster_dict):
         print(f"{i + 1}. {monster['name']}")
 
+    # Memilih monster
     while True:
         x = utils.strip(input(">>> "))
         if x in monster_indices:
             while True:
-                y = utils.strip(input("Apakah kamu yakin? (Y/N): "))
+                y = utils.strip(input("Apakah kamu yakin? (Y/N): ")) # Konfirmasi
                 if y.lower() == 'y':
                     utils.remove_xth_line_above(1)
                     break
@@ -121,6 +134,7 @@ def switch_monster(monster_dict : DictList, current_monster_index : int = None) 
                                 time.sleep(1)
                                 utils.remove_x_line_above(2)
                             else:
+                                utils.remove_x_line_above(1)
                                 break
                     else:
                         utils.remove_x_line_above(2)
@@ -130,6 +144,7 @@ def switch_monster(monster_dict : DictList, current_monster_index : int = None) 
                     time.sleep(1)
                     utils.remove_x_line_above(2)
             
+            # Mengganti index monster yang sedang dipakai
             utils.clear_terminal()
             print_user_monster()
             current_monster_index = int(x) - 1
@@ -142,31 +157,10 @@ def switch_monster(monster_dict : DictList, current_monster_index : int = None) 
     time.sleep(1.5)
     utils.clear_terminal()
     return current_monster_index,monster_dict[current_monster_index],True
-
-def show_stat(monster : Dictionary, status_effect : Matrix, current_monster_index : int):
-    def calculate_increase(stat_name : str, monster : Dictionary, max_value : int = None) -> str:
-        if stat_name in status_effect[current_monster_index]:
-            increase = int(0.05 / 1.05 * monster[stat_name])
-            if increase == 0:
-                increase = 1
-            if max_value is not None:
-                new_stat_value = utils.min(monster[stat_name] + increase, max_value)
-                increase = new_stat_value - monster[stat_name]
-            return f" (+{increase})"
-        else:
-            return ""
-
-    print(f"""{'Player'}
-{'Name':<15}: {monster['name']}
-{'Type':<15}: {monster['type']}
-{'Level':<15}: {monster['level']}
-{'Attack Power':<15}: {monster['atk_power']}{calculate_increase('atk_power', monster)}
-{'Defense Power':<15}: {monster['def_power']}{calculate_increase('def_power', monster,50)}
-{'Speed':<15}: {monster['speed']}{calculate_increase('speed', monster,50)}
-{'HP':<15}: {f"{monster['hp']}/{monster['max_hp']}"}""")
     
 def show_both_stat(monster1 : Dictionary, monster2 : Dictionary, status_effect : Matrix, current_monster_index : int):
 
+    # Menghitung kenaikan stat saat menggunakan potion
     def calculate_increase(stat_name : str, monster : Dictionary, max_value : int = None) -> str:
         if stat_name in status_effect[current_monster_index]:
             increase = int(0.05 / 1.05 * monster[stat_name])
@@ -217,11 +211,14 @@ def select_action(arena : bool = False) -> str:
     return x
 
 def select_potion(user_items : Matrix, monster : Dictionary, current_monster_index : int, status_effect : Matrix, monster_data : Matrix) -> bool:
+    
+    # Mencari potion terdapat di index mana saja
     strength_index = utils.find_row(user_items, 1, 'strength')
     speed_index = utils.find_row(user_items, 1, 'speed')
     resilience_index = utils.find_row(user_items, 1, 'resilience')
     healing_index = utils.find_row(user_items, 1, 'healing')
 
+    # Pilih potion
     if user_items and (user_items[strength_index][2] != 0 or user_items[speed_index][2] !=0 or user_items[resilience_index][2] != 0 or user_items[healing_index][2] != 0):
         while True:
             print("Select Potion:")
@@ -331,6 +328,7 @@ def select_potion(user_items : Matrix, monster : Dictionary, current_monster_ind
 
 def attack(attacker : Dictionary, defender : Dictionary, monster : Dictionary, enemy : Dictionary, status_effect : Matrix, current_monster_index : int) -> int:
 
+    # Hitung perubahan stat dalam %
     def calculate_increase(stat : int) -> str:
         if stat < 0:
             return str(stat) + '%'
@@ -347,8 +345,11 @@ def attack(attacker : Dictionary, defender : Dictionary, monster : Dictionary, e
     speed_diff = defender['speed'] - attacker['speed']
     dodge_chance = max(speed_diff,0)
     
+    # Print detail
     print(f"Attack: {base_damage} ({calculate_increase(attack_multiplier - 100)}), Reduced by: {damage_reduction} ({defender['def_power']}%)")
     time.sleep(1)
+    
+    # Peluang mengelak serangan
     if rng.rng(1,100) > dodge_chance:
         print(f"{attacker['name']} attacks {defender['name']} for {damage} damage.")
         defender['hp'] = max(defender['hp'] - damage, 0)
@@ -365,7 +366,8 @@ def execute_turn(first : Dictionary, second : Dictionary, monster : Dictionary, 
     first_damage = attack(first,second, monster, enemy,status_effect, current_monster_index)
     if second['hp'] <= 0:
         print(f"{second['name']} fainted")
-        return first_damage, 0
+        return first_damage, 0 # Jika lawan mati, maka tidak terkena damage dari serangan yang akan datang itu
+   
     second_damage = attack(second,first, monster, enemy,status_effect, current_monster_index)
     if first['hp'] <= 0:
         print(f"{first['name']} fainted")
@@ -383,14 +385,14 @@ def run(monster : Dictionary, enemy : Dictionary, escape_attempt : int) -> bool:
             return False
 
 def heal(monster : Dictionary, monster_data : Matrix) -> int:
-    monster_index = utils.find_row(monster_data, index = 0, element = monster['id'])
-    max_hp = int(int(monster_data[monster_index][4]) * (1 + (monster['level'] - 1) * 0.1))
-    return int(utils.min(monster['hp'] + 0.25 * max_hp, max_hp))
+    monster_index = utils.find_row(monster_data, index = 0, element = monster['id']) # Mencari index monster
+    max_hp = int(int(monster_data[monster_index][4]) * (1 + (monster['level'] - 1) * 0.1)) # Mencari darah maksimal monster
+    return int(utils.min(monster['hp'] + 0.25 * max_hp, max_hp)) # Mengubah darah monster sekarang
 
 def potion(status : str, monster : Dictionary, current_monster_index : int, status_effect : Matrix, max_value : int = None):
     status_effect[current_monster_index].append(status)
     if max_value is not None:
-        if monster[status] <= 20:
+        if monster[status] <= 20: # Jika boost sangat kecil, maka dibulatkan ke 11
             monster[status] = monster[status] + 1
         else:
             monster[status] = utils.min(int(1.05 * monster[status]),max_value)
@@ -401,6 +403,8 @@ def battle(current_user : Array, monster_level : int, user_data : Matrix, user_i
     total_damage_taken = 0
     total_damage_dealt = 0
     victory = False
+    
+    # Cek apakah user sudah login atau merupakan user
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)
@@ -413,22 +417,26 @@ def battle(current_user : Array, monster_level : int, user_data : Matrix, user_i
         return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
     else:
         utils.clear_terminal()
+
+        # Inisialisasi
         monster_dict = inventory.load_user_monsters(user_id,monster_inventory_data,monster_data, battle = True)
         enemy = load_enemy(monster_data,monster_level)
         user_items = inventory.get_user_inventory(user_id,item_inventory_data)
+
+        # Jika tidak ada monster, maka tidak bisa bertarung
         if utils.is_empty(monster_dict):
             print("Anda tidak memiliki monster yang bisa bertarung")
             time.sleep(1)
             utils.remove_x_line_above(2)
             return 0, 0, False, item_inventory_data,monster_inventory_data
         else:
-            
-            status_effect = [[''] for i in range(len(monster_dict))]
+            status_effect = [[''] for i in range(len(monster_dict))] # Matrix tempat mengisi status effect monster
             escape_attempt = 0
             print_enemy_monster()
             print(f"RAWRRR, Monster {enemy['type']} telah muncul")
             time.sleep(1.5)
-            current_monster_index, monster, action_executed = switch_monster(monster_dict)
+            current_monster_index, monster, action_executed = switch_monster(monster_dict) # Pilih monster pertama
+
             while monster['hp'] > 0 and enemy['hp'] > 0:
                 utils.clear_terminal()
                 action_executed = False
@@ -493,6 +501,8 @@ def battle(current_user : Array, monster_level : int, user_data : Matrix, user_i
                         damage_taken = attack(enemy,monster,monster, enemy,status_effect, current_monster_index)
                         total_damage_taken = total_damage_taken + damage_taken
                     time.sleep(1.5)
+            
+            # Reward dibagikan berdasarkan menang atau tidak
             if enemy['hp'] <= 0:
                 print(f"Selamat Anda telah berhasil mengalahkan monster {enemy['type']}")
                 victory = True
@@ -505,6 +515,8 @@ def battle(current_user : Array, monster_level : int, user_data : Matrix, user_i
             else:
                 print("Anda berhasil kabur dari battle")
                 victory = False
+
+            # Update data
             item_inventory_data = update_item_inventory_data(user_id, user_items, item_inventory_data)
             monster_inventory_data = update_monster_inventory_data(user_id, monster_dict, monster_inventory_data)
             monster_dict = []
@@ -512,6 +524,7 @@ def battle(current_user : Array, monster_level : int, user_data : Matrix, user_i
             enemy = {}
             time.sleep(2)
             utils.clear_terminal()
+            
             return total_damage_dealt, total_damage_taken, victory, item_inventory_data,monster_inventory_data
 
 def update_item_inventory_data(user_id : str, user_items : Matrix, item_inventory_data : Matrix) -> Matrix:

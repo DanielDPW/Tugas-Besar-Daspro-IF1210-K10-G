@@ -17,6 +17,8 @@ def print_healing_fountain():
 """)
     
 def healingfountain(current_user : Array, user_id : str, user_data : Matrix, monster_inventory_data : Matrix, monster_data : Matrix) -> Tuple[Matrix, Matrix]:
+    
+    # Cek apakah user sudah login atau merupakan admin
     if utils.is_empty(current_user):
         print("Anda belum login")
         time.sleep(1)
@@ -30,15 +32,18 @@ def healingfountain(current_user : Array, user_id : str, user_data : Matrix, mon
     else:
         utils.clear_terminal()
         print_healing_fountain()
-        user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1
-        print(f"Jumlah OWCA Coins Anda sekarang adalah {user_data[user_index][4]}")
+        user_index = utils.find_row(utils.slice_matrix(user_data, row_start = 1), 0, user_id) + 1 # Cari index user
+        print(f"Jumlah OWCA Coins Anda sekarang adalah {user_data[user_index][4]}") # Cari OC user
         monster_dict = inventory.load_user_monsters(user_id, monster_inventory_data, monster_data)
+
+        # Cek apakah ada monster yang HP nya < Max HP
         can_heal = False
         count = 0
         for monster in monster_dict:
             if monster['hp'] != monster['max_hp']:
                 can_heal = True
                 count = count + 1
+        
         if not can_heal:
             print("Monster Anda tidaklah terluka")
         else:

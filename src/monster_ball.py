@@ -7,7 +7,9 @@ from . import utils
 from .types import *
 
 def catch(user_id : str,enemy : Dictionary, monster_inventory_data : Matrix):
-    odds = rng.rng(1,100)
+    odds = rng.rng(1,100) # Mencari angka dari 1-100
+    
+    # Makin renadah hp musuh, makin tinggi peluang menangkapnya
     if enemy['level'] == 1:
         if odds < int((1-(enemy['hp']/enemy['max_hp'])) * 75):
             print("Monster berhasil ditangkap")
@@ -50,9 +52,9 @@ def catch(user_id : str,enemy : Dictionary, monster_inventory_data : Matrix):
             print("Monster lepas dari Monster Ball")
 
 def monster_ball(user_id : str, enemy : Dictionary, user_items : Matrix, monster_inventory_data : Matrix) -> bool:
-    monster_ball_index = utils.find_row(user_items, 1, 'monsterball')
+    monster_ball_index = utils.find_row(user_items, 1, 'monsterball') # Cari index monster ball di inventory
     if monster_ball_index != -1 and user_items[monster_ball_index][2] > 0:
-        print(f"Monster Ball (Quantity: {user_items[monster_ball_index][2]})")
+        print(f"Monster Ball (Quantity: {user_items[monster_ball_index][2]})") # Print jumlah monster ball
         while True:
             x = utils.strip(input("Catch? (Y/N) "))
             if x.lower() == 'y':

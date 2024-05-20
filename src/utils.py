@@ -67,12 +67,6 @@ def is_in_column(matrix : Matrix, index : int, x : str) -> bool:
             return True
     return False
 
-def is_in_row(matrix : Matrix, index : int, x : str) -> bool:
-    if x in matrix[index]:
-        return True
-    else:
-        return False
-
 def is_empty(array : Array) -> bool:
     if len(array) == 0:
         return True
@@ -81,50 +75,12 @@ def is_empty(array : Array) -> bool:
                 return False
     return True
 
-
-def row_length(matrix : Matrix) -> int:
-    if matrix:
-        return len(matrix[0])
-    else:
-        return 0
-
-def column_length(matrix : Matrix) -> int:
-    if matrix:
-        return len(matrix)
-    else:
-        return 0
-
-def remove_empty_row(matrix : Matrix) -> Matrix:
-    new_matrix = []
-
-    for row in matrix:
-        if not is_empty(row):
-            new_matrix.append(row)
-
-    return new_matrix
-
-def copy_matrix(matrix : Matrix) -> Matrix:
-    new_matrix = [[None] * len(matrix[0]) for i in range(len(matrix))]
-
-    for i in range(len(matrix)):
-        for j in range(len(matrix[0])):
-            new_matrix [i][j] = matrix[i][j]
-
-    return new_matrix
-
 def copy_array(array : Array) -> Array:
     new_array = []
     
     for i in range(len(array)):
         new_array.append(array[i])
     
-    return new_array
-
-def remove_index(array : Array, index : int) -> Array:
-    new_array = []
-    for i in range(len(array)):
-        if i != index:
-            new_array.append(array[i])
     return new_array
 
 def remove_value(array : Array, value : str) -> Array:
@@ -149,40 +105,6 @@ def remove_row(matrix : Matrix, index : Optional[int] = None, element : Optional
         new_matrix = matrix
 
     return new_matrix
-
-def copy_row(matrix : Matrix, index : Optional[int] = None, element : Optional[str] = None) -> Matrix:
-    new_matrix = []
-    
-    if index is not None and element is None:
-        for i, row in enumerate(matrix):
-            if i == index:
-                new_matrix.append(row)
-    elif element is not None and index is None:
-        for row in matrix:
-            if element in row:
-                new_matrix.append(row)
-    elif element is not None and index is not None:
-        for row in matrix:
-            if index <= len(row) and row[index] == element:
-                new_matrix.append(row)
-    else:
-        new_matrix = matrix
-
-    return new_matrix
-
-def slice_array(array : Array, start : Optional[int] = None, stop : Optional[int] = None, step : Optional[int] = None) -> Array:
-    if start is None:
-        start = 0
-    if stop is None:
-        stop = len(array)
-    if step is None:
-        step = 1
-
-    new_array = []
-    for i in range(start, stop, step):
-        new_array.append(array[i])
-
-    return new_array
 
 def slice_matrix(matrix : Matrix, row_start : Optional[int] = None, row_stop : Optional[int] = None, row_step : Optional[int] = None, col_start : Optional[int] = None, col_stop : Optional[int] = None, col_step : Optional[int] = None) -> Matrix:
     if row_start is None:
@@ -217,12 +139,6 @@ def is_space(x : str) -> bool:
                 return False
         return True
 
-def is_digit(x: str) -> bool:
-    for i in range(len(x)):
-        if not x[i] in "0123456789":
-            return False
-    return True
-
 def is_in_dict(dict_list : DictList, key : str, value : str) -> bool:
     for dictionary in dict_list:
         if key in dictionary and dictionary[key] == value:
@@ -241,12 +157,6 @@ def find_dict_index(dict_list : DictList, key: str, value: str) -> int:
             return i
     return -1
 
-def copy_dict(dict : Dictionary) -> Dictionary:
-    new_dict = {}
-    for key in dict:
-        new_dict[key] = dict[key]
-    return new_dict 
-
 def ascending_sort(array : Array) -> Array:
     n = len(array)
 
@@ -258,20 +168,6 @@ def ascending_sort(array : Array) -> Array:
                 min_index = j
 
         array[i], array[min_index] = array[min_index], array[i]
-    
-    return array
-
-def descending_sort(array : Array) -> Array:
-    n = len(array)
-
-    for i in range(n - 1):
-        max_index = i
-
-        for j in range(i + 1, n):
-            if array[j] > array[max_index]:
-                max_index = j
-                
-        array[i], array[max_index] = array[max_index], array[i]
     
     return array
 
